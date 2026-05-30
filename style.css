@@ -1,0 +1,57 @@
+body {
+  font-family: Arial;
+  text-align: center;
+  background: #f2f2f2;
+}
+
+#timer {
+  font-size: 30px;
+  margin: 10px;
+  font-weight: bold;
+}
+
+#textToType {
+  background: white;
+  padding: 15px;
+  margin: 20px auto;
+  width: 60%;
+  border-radius: 8px;
+  text-align: left;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 18px;
+  min-height: 60px;
+}
+
+#textToType span {
+  display: inline-block;
+}
+
+.correct {
+  color: #2e7d32;
+}
+
+.wrong {
+  color: #c62828;
+}
+
+textarea {
+  width: 60%;
+  height: 120px;
+  font-size: 16px;
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#result {
+  background: white;
+  margin: 20px auto;
+  width: 60%;
+  padding: 20px;
+  border-radius: 10px;
+}
