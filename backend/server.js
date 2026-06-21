@@ -6,7 +6,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const app = express();
-
+const Score = require("./models/Score");
+const BurstScore = require("./models/BurstScore");
 app.use(cors());
 app.use(express.json());
 
@@ -98,6 +99,139 @@ app.post("/login", async (req, res) => {
         console.error(error);
         res.status(500).json({
             message: "Server error"
+        });
+    }
+});
+app.post("/save-score", async (req, res) => {
+    try {
+
+        const { username, wpm, accuracy } = req.body;
+        
+        const existingScore = await Score.findOne({ username });
+
+        if (!existingScore) {
+
+            await Score.create({
+                username,
+                wpm,
+                accuracy
+            });
+
+        } else if (wpm > existingScore.wpm) {
+
+            existingScore.wpm = wpm;
+            existingScore.accuracy = accuracy;
+
+            await existingScore.save();
+        }
+
+        res.json({
+            message: "Score saved successfully"
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server error"
+        });
+    }
+});
+app.post("/save-burst-score", async (req, res) => {
+
+    try {
+
+        const { username, score } = req.body;
+        
+        const existingScore =
+            await BurstScore.findOne({ username });
+
+        if (!existingScore) {
+
+            await BurstScore.create({
+                username,
+                score
+            });
+
+        } else if (score > existingScore.score) {
+
+            existingScore.score = score;
+
+            await existingScore.save();
+        }
+
+        res.json({
+            message: "Burst score saved"
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server Error"
+        });
+    }
+});
+app.get("/leaderboard", async (req, res) => {
+    try {
+        const scores = await Score.find()
+            .sort({ wpm: -1 })
+            .limit(10);
+
+        res.json(scores);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Server error"
+        });
+    }
+});
+app.get("/burst-leaderboard", async (req, res) => {
+
+    try {
+
+        const scores = await BurstScore.find()
+            .sort({ score: -1 })
+            .limit(10);
+
+        res.json(scores);
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server Error"
+        });
+    }
+});
+app.get("/profile/:username", async (req, res) => {
+
+    try {
+
+        const username = req.params.username;
+
+        const typingScore =
+            await Score.findOne({ username });
+
+        const burstScore =
+            await BurstScore.findOne({ username });
+
+        res.json({
+            wpm: typingScore?.wpm || 0,
+            accuracy: typingScore?.accuracy || 0,
+            burstScore: burstScore?.score || 0
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server Error"
         });
     }
 });
