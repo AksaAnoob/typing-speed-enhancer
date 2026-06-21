@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboard - Type Mastery</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>🏆 Leaderboard</h1>
+
+<table id="leaderboardTable">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>Username</th>
+            <th>WPM</th>
+            <th>Accuracy</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<button onclick="window.location.href='index.html'">
+    Back to Test
+</button>
+
+<script>
+const currentUser =
+    localStorage.getItem("username");
+
+fetch("http://localhost:5000/leaderboard")
+.then(res => res.json())
+.then(scores => {
+
+    let tbody =
+        document.querySelector("#leaderboardTable tbody");
+
+    scores.forEach((score, index) => {
+
+        let rank;
+
+        if (index === 0) rank = "🥇";
+        else if (index === 1) rank = "🥈";
+        else if (index === 2) rank = "🥉";
+        else rank = index + 1;
+
+        let rowClass = "";
+
+        if (score.username === currentUser) {
+            rowClass = "current-user";
+        }
+
+        let row = `
+            <tr class="${rowClass}">
+                <td>${rank}</td>
+                <td>${score.username}</td>
+                <td>${score.wpm}</td>
+                <td>${score.accuracy}%</td>
+            </tr>
+        `;
+
+        tbody.innerHTML += row;
+    });
+
+})
+.catch(err => console.error(err));
+</script>
+
+</body>
+</html>

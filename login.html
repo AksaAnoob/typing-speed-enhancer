@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Type Mastery</title>
+    <title>Login - Type Mastery</title>
 
-```
 <style>
     *{
         margin:0;
@@ -24,7 +23,7 @@
     }
 
     .card{
-        width:420px;
+        width:400px;
         padding:40px;
         border-radius:20px;
         background:rgba(255,255,255,0.08);
@@ -86,10 +85,10 @@
 
     #message{
         margin-top:15px;
-        color:#4ade80;
+        color:#f87171;
     }
 </style>
-```
+
 
 </head>
 
@@ -100,16 +99,9 @@
 
 <h1>TYPE MASTERY ⚡</h1>
 
-<p>Create Your Account</p>
+<p>Access Your Typing Arena</p>
 
-<form id="registerForm">
-
-    <input
-        type="text"
-        id="username"
-        placeholder="Username"
-        required
-    >
+<form id="loginForm">
 
     <input
         type="email"
@@ -126,15 +118,15 @@
     >
 
     <button type="submit">
-        REGISTER
+        LOGIN
     </button>
 
 </form>
 
 <br>
 
-<a href="login.html">
-    Already have an account? Login
+<a href="register.html">
+    Don't have an account? Register
 </a>
 
 <p id="message"></p>
@@ -143,17 +135,16 @@
 </div>
 
 <script>
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
     try {
 
-        const response = await fetch("http://localhost:5000/register", {
+        const response = await fetch("http://localhost:5000/login", {
 
             method:"POST",
 
@@ -162,7 +153,6 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
             },
 
             body:JSON.stringify({
-                username,
                 email,
                 password
             })
@@ -173,21 +163,19 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
         if(response.ok){
 
-    document.getElementById("message").innerText =
-    "Registration successful! Redirecting to login...";
+            localStorage.setItem("token",data.token);
+            localStorage.setItem("username",data.username);
 
-    setTimeout(() => {
-        window.location.href = "login.html";
-    }, 2000);
+            window.location.href = "mode.html";
 
-}else{
+        }else{
 
-    document.getElementById("message").innerText =
-    data.message;
+            document.getElementById("message").innerText =
+            data.message;
 
-}
+        }
 
-    } catch(error){
+    }catch(error){
 
         document.getElementById("message").innerText =
         "Error connecting to server";

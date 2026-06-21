@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Burst Mode</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>BURST MODE ⚡</h1>
+
+<div class="stats">
+
+    <div class="card">
+        <h3>Timer</h3>
+        <p id="timer">60</p>
+    </div>
+
+    <div class="card">
+        <h3>Score</h3>
+        <p id="score">0</p>
+    </div>
+    <div class="card">
+    <h3>Combo</h3>
+    <p id="combo">0</p>
+</div>
+</div>
+
+<div id="wordBox">
+    Press Start
+</div>
+
+<input
+    type="text"
+    id="wordInput"
+    placeholder="Type here..."
+>
+
+<br><br>
+
+<button onclick="startBurst()">
+    Start
+</button>
+
+<button onclick="finishBurst()">
+    End
+</button>
+
+<script src="burst.js"></script>
+
+</body>
+</html>
