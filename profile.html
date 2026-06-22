@@ -15,7 +15,9 @@
     <div class="glass-card header">
 
         <div class="avatar-section">
-            <img id="avatar" src="avatars/default.png" class="avatar">
+            <img id="avatar" class="avatar"
+                 src="https://api.dicebear.com/7.x/initials/svg?seed=User">
+
             <button onclick="openAvatarPicker()">Change Avatar</button>
         </div>
 
@@ -53,10 +55,10 @@
         <h2>Select Avatar</h2>
 
         <div class="avatar-grid">
-            <img src="avatars/a1.png" onclick="selectAvatar('a1.png')">
-            <img src="avatars/a2.png" onclick="selectAvatar('a2.png')">
-            <img src="avatars/a3.png" onclick="selectAvatar('a3.png')">
-            <img src="avatars/a4.png" onclick="selectAvatar('a4.png')">
+            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=1" onclick="selectAvatar('identicon1')">
+            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=2" onclick="selectAvatar('identicon2')">
+            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=3" onclick="selectAvatar('identicon3')">
+            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=4" onclick="selectAvatar('identicon4')">
         </div>
 
         <button onclick="saveAvatar()">Save</button>

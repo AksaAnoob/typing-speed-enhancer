@@ -1,12 +1,15 @@
 let selectedAvatar = null;
 
+const backendURL = "https://typing-speed-enhancer-1.onrender.com/profile/${username}";
+
 const username = localStorage.getItem("username");
 
 document.getElementById("username").innerText =
     username || "Guest";
 
-// load profile data
-fetch(`https://typing-speed-enhancer-1.onrender.com/profile/${username}`)
+/* ---------------- PROFILE LOAD ---------------- */
+
+fetch(`${backendURL}/profile/${username}`)
 .then(res => res.json())
 .then(data => {
 
@@ -14,15 +17,19 @@ fetch(`https://typing-speed-enhancer-1.onrender.com/profile/${username}`)
     document.getElementById("bestAccuracy").innerText = data.accuracy + "%";
     document.getElementById("bestBurst").innerText = data.burstScore;
 
-    // load avatar if exists
+    // avatar load
     if (data.avatar) {
-        document.getElementById("avatar").src = "avatars/" + data.avatar;
+        document.getElementById("avatar").src =
+            `https://api.dicebear.com/7.x/initials/svg?seed=${data.avatar}`;
+    } else {
+        document.getElementById("avatar").src =
+            `https://api.dicebear.com/7.x/initials/svg?seed=${username}`;
     }
 
 })
 .catch(err => console.error(err));
 
-/* AVATAR FUNCTIONS */
+/* ---------------- AVATAR UI ---------------- */
 
 function openAvatarPicker() {
     document.getElementById("avatarModal").classList.remove("hidden");
@@ -32,25 +39,31 @@ function closeAvatarPicker() {
     document.getElementById("avatarModal").classList.add("hidden");
 }
 
-function selectAvatar(img) {
-    selectedAvatar = img;
-    document.getElementById("avatar").src = "avatars/" + img;
+function selectAvatar(id) {
+    selectedAvatar = id;
+
+    document.getElementById("avatar").src =
+        `https://api.dicebear.com/7.x/identicon/svg?seed=${id}`;
 }
+
+/* ---------------- SAVE TO BACKEND ---------------- */
 
 function saveAvatar() {
 
     if (!selectedAvatar) return;
 
-    fetch("https://typing-speed-enhancer-1.onrender.com/updateAvatar", {
+    fetch(`${backendURL}/updateAvatar`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify({
             username: username,
             avatar: selectedAvatar
         })
     })
-    .then(res => res.text())
-    .then(msg => {
+    .then(res => res.json())
+    .then(() => {
         alert("Avatar updated!");
         closeAvatarPicker();
     })

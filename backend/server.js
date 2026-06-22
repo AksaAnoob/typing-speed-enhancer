@@ -214,16 +214,22 @@ app.get("/profile/:username", async (req, res) => {
 
         const username = req.params.username;
 
-        const typingScore =
-            await Score.findOne({ username });
+        // get typing score
+        const typingScore = await Score.findOne({ username });
 
-        const burstScore =
-            await BurstScore.findOne({ username });
+        // get burst score
+        const burstScore = await BurstScore.findOne({ username });
+
+        // ⭐ IMPORTANT: get user data (avatar stored here)
+        const user = await User.findOne({ username });
 
         res.json({
             wpm: typingScore?.wpm || 0,
             accuracy: typingScore?.accuracy || 0,
-            burstScore: burstScore?.score || 0
+            burstScore: burstScore?.score || 0,
+
+            // ⭐ ADD THIS
+            avatar: user?.avatar || null
         });
 
     } catch (error) {
@@ -234,6 +240,16 @@ app.get("/profile/:username", async (req, res) => {
             message: "Server Error"
         });
     }
+});
+app.post("/updateAvatar", async (req, res) => {
+    const { username, avatar } = req.body;
+
+    await User.findOneAndUpdate(
+        { username },
+        { avatar }
+    );
+
+    res.json({ message: "updated" });
 });
 const PORT = process.env.PORT || 5000;
 
