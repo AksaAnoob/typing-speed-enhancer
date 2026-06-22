@@ -436,7 +436,9 @@ body.bg {
     cursor: pointer;
     border: 2px solid transparent;
 }
-
+.hidden {
+    display: none;
+}
 .avatar-grid img:hover {
     border: 2px solid #38bdf8;
 }

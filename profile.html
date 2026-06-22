@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         .avatar-grid img {
             cursor: pointer;
@@ -24,10 +24,6 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-        }
-
-        .glass-card {
-            padding: 20px;
         }
 
         .modal {
@@ -61,7 +57,6 @@
 
         <div class="avatar-section">
 
-            <!-- IMPORTANT: no fixed avatar source -->
             <img id="avatar" class="avatar"
                  src="https://api.dicebear.com/7.x/identicon/svg?seed=loading">
 
@@ -97,31 +92,43 @@
 <!-- AVATAR MODAL -->
 <div id="avatarModal" class="modal hidden">
 
-    <div class="modal-content glass-card">
+    <div class="modal-content">
 
         <h2>Select Avatar</h2>
 
-        <div class="avatar-grid">
+       <div class="avatar-grid">
 
-            <!-- ANIMALS -->
-            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=animal1" onclick="selectAvatar('animal1')">
-            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=animal2" onclick="selectAvatar('animal2')">
-            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=animal3" onclick="selectAvatar('animal3')">
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=cat"
+         onclick="selectAvatar('cat', event)">
 
-            <!-- FLOWERS -->
-            <img src="https://api.dicebear.com/7.x/icons/svg?seed=flower1" onclick="selectAvatar('flower1')">
-            <img src="https://api.dicebear.com/7.x/icons/svg?seed=flower2" onclick="selectAvatar('flower2')">
-            <img src="https://api.dicebear.com/7.x/icons/svg?seed=flower3" onclick="selectAvatar('flower3')">
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=dog"
+         onclick="selectAvatar('dog', event)">
 
-            <!-- FRUITS -->
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=fruit1" onclick="selectAvatar('fruit1')">
-            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=fruit2" onclick="selectAvatar('fruit2')">
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=lion"
+         onclick="selectAvatar('lion', event)">
 
-            <!-- FUN -->
-            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=fun1" onclick="selectAvatar('fun1')">
-            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=fun2" onclick="selectAvatar('fun2')">
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=tiger"
+         onclick="selectAvatar('tiger', event)">
 
-        </div>
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=rabbit"
+         onclick="selectAvatar('rabbit', event)">
+
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=apple"
+         onclick="selectAvatar('apple', event)">
+
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=banana"
+         onclick="selectAvatar('banana', event)">
+
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=flower"
+         onclick="selectAvatar('flower', event)">
+
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=star"
+         onclick="selectAvatar('star', event)">
+
+    <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=rocket"
+         onclick="selectAvatar('rocket', event)">
+
+</div>
 
         <br>
 

@@ -9,24 +9,7 @@ document.getElementById("username").innerText =
 /* ---------------- AVATAR MAPPER ---------------- */
 
 function getAvatarUrl(seed) {
-
-    if (!seed) {
-        return `https://api.dicebear.com/7.x/adventurer/svg?seed=${username}`;
-    }
-
-    if (seed.startsWith("animal")) {
-        return `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
-    }
-
-    if (seed.startsWith("flower")) {
-        return `https://api.dicebear.com/7.x/icons/svg?seed=${seed}`;
-    }
-
-    if (seed.startsWith("fruit")) {
-        return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
-    }
-
-    return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+    return `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
 }
 
 /* ---------------- PROFILE LOAD ---------------- */
@@ -39,35 +22,53 @@ fetch(`${backendURL}/profile/${username}`)
     document.getElementById("bestAccuracy").innerText = data.accuracy + "%";
     document.getElementById("bestBurst").innerText = data.burstScore;
 
-    // avatar load
     document.getElementById("avatar").src =
         getAvatarUrl(data.avatar || username);
 
 })
 .catch(err => console.error("Profile load error:", err));
 
-/* ---------------- AVATAR UI ---------------- */
+/* ---------------- MODAL CONTROL ---------------- */
 
 function openAvatarPicker() {
-    document.getElementById("avatarModal").classList.remove("hidden");
+    selectedAvatar = null;
+
+    document.getElementById("avatarModal")
+        .classList.remove("hidden");
 }
 
 function closeAvatarPicker() {
-    document.getElementById("avatarModal").classList.add("hidden");
+    document.getElementById("avatarModal")
+        .classList.add("hidden");
 }
 
-function selectAvatar(id) {
+/* ---------------- AVATAR SELECT ---------------- */
+
+function selectAvatar(id, event) {
+
     selectedAvatar = id;
 
     document.getElementById("avatar").src =
         getAvatarUrl(id);
+
+    // remove previous highlight
+    document.querySelectorAll(".avatar-grid img")
+        .forEach(img => img.style.outline = "none");
+
+    // highlight selected
+    if (event && event.target) {
+        event.target.style.outline = "3px solid #00ffcc";
+    }
 }
 
 /* ---------------- SAVE AVATAR ---------------- */
 
 function saveAvatar() {
 
-    if (!selectedAvatar) return;
+    if (!selectedAvatar) {
+        alert("Please select an avatar first!");
+        return;
+    }
 
     fetch(`${backendURL}/updateAvatar`, {
         method: "POST",
