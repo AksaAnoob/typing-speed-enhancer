@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Type Mastery</title>
 
-```
+
 <style>
     *{
         margin:0;
@@ -89,7 +89,7 @@
         color:#4ade80;
     }
 </style>
-```
+
 
 </head>
 
@@ -150,48 +150,56 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const username = document.getElementById("username").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const messageBox = document.getElementById("message");
+
+    // RESET MESSAGE EVERY TIME
+    messageBox.innerText = "";
+
+    // ✅ FRONTEND VALIDATION FIRST (IMPORTANT)
+    const pattern = /^(?=.*[A-Z]).{6,}$/;
+
+    if (!pattern.test(password)) {
+        messageBox.style.color = "red";
+        messageBox.innerText =
+        "Password must be 6+ characters and include 1 uppercase letter!";
+        return; // ❌ STOP HERE, DO NOT CALL SERVER
+    }
 
     try {
 
         const response = await fetch("http://localhost:5000/register", {
-
-            method:"POST",
-
-            headers:{
-                "Content-Type":"application/json"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-
-            body:JSON.stringify({
+            body: JSON.stringify({
                 username,
                 email,
                 password
             })
-
         });
 
         const data = await response.json();
 
-        if(response.ok){
+        if (response.ok) {
 
-    document.getElementById("message").innerText =
-    "Registration successful! Redirecting to login...";
+            messageBox.style.color = "#4ade80";
+            messageBox.innerText =
+            "Registration successful! Redirecting...";
 
-    setTimeout(() => {
-        window.location.href = "login.html";
-    }, 2000);
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 2000);
 
-}else{
+        } else {
+            messageBox.style.color = "red";
+            messageBox.innerText = data.message;
+        }
 
-    document.getElementById("message").innerText =
-    data.message;
-
-}
-
-    } catch(error){
-
-        document.getElementById("message").innerText =
-        "Error connecting to server";
-
+    } catch (error) {
+        messageBox.style.color = "red";
+        messageBox.innerText =
+        "Server not responding";
     }
 
 });
