@@ -4,29 +4,64 @@
     <title>My Profile</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-<h1>👤 My Profile</h1>
+<body class="bg">
 
-<div class="profile-card">
+<div class="profile-container">
 
-    <h2 id="username">Loading...</h2>
+    <h1 class="title">👤 My Profile</h1>
 
+    <!-- PROFILE HEADER -->
+    <div class="glass-card header">
+
+        <div class="avatar-section">
+            <img id="avatar" src="avatars/default.png" class="avatar">
+            <button onclick="openAvatarPicker()">Change Avatar</button>
+        </div>
+
+        <h2 id="username">Loading...</h2>
+
+    </div>
+
+    <!-- STATS -->
     <div class="stats">
-        <div class="card">
+
+        <div class="glass-card stat">
             <h3>Best WPM</h3>
             <p id="bestWpm">0</p>
         </div>
 
-        <div class="card">
+        <div class="glass-card stat">
             <h3>Accuracy</h3>
             <p id="bestAccuracy">0%</p>
         </div>
 
-        <div class="card">
+        <div class="glass-card stat">
             <h3>Burst Score</h3>
             <p id="bestBurst">0</p>
         </div>
+
+    </div>
+
+</div>
+
+<!-- AVATAR MODAL -->
+<div id="avatarModal" class="modal hidden">
+
+    <div class="modal-content glass-card">
+
+        <h2>Select Avatar</h2>
+
+        <div class="avatar-grid">
+            <img src="avatars/a1.png" onclick="selectAvatar('a1.png')">
+            <img src="avatars/a2.png" onclick="selectAvatar('a2.png')">
+            <img src="avatars/a3.png" onclick="selectAvatar('a3.png')">
+            <img src="avatars/a4.png" onclick="selectAvatar('a4.png')">
+        </div>
+
+        <button onclick="saveAvatar()">Save</button>
+        <button onclick="closeAvatarPicker()">Close</button>
+
     </div>
 
 </div>
