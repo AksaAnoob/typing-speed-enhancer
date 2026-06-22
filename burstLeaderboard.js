@@ -1,7 +1,7 @@
 const currentUser =
     localStorage.getItem("username");
 
-fetch("http://localhost:5000/burst-leaderboard")
+fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
 .then(res => res.json())
 .then(data => {
 

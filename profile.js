@@ -6,7 +6,7 @@ document.getElementById("username").innerText =
     username || "Guest";
 
 // load profile data
-fetch(`http://localhost:5000/profile/${username}`)
+fetch(`https://typing-speed-enhancer-1.onrender.com/profile/${username}`)
 .then(res => res.json())
 .then(data => {
 
@@ -41,7 +41,7 @@ function saveAvatar() {
 
     if (!selectedAvatar) return;
 
-    fetch("http://localhost:5000/updateAvatar", {
+    fetch("https://typing-speed-enhancer-1.onrender.com/updateAvatar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

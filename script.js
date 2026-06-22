@@ -278,7 +278,7 @@ function calculateResult() {
 
   if (username) {
 
-    fetch("http://localhost:5000/save-score", {
+    fetch("https://typing-speed-enhancer-1.onrender.com/save-score", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
