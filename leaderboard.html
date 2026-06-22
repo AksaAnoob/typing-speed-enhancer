@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>Rank</th>
-            <th>Username</th>
+            <th>Player</th>
             <th>WPM</th>
             <th>Accuracy</th>
         </tr>
@@ -21,17 +21,39 @@
     <tbody></tbody>
 </table>
 
-
-
 <script>
-const currentUser =
-    localStorage.getItem("username");
+
+const currentUser = localStorage.getItem("username");
+
+/* ---------- AVATAR URL HELPER ---------- */
+
+function getAvatarUrl(seed) {
+
+    if (!seed)
+        return "https://api.dicebear.com/7.x/adventurer/svg?seed=guest";
+
+    if (seed.startsWith("animal"))
+        return `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
+
+    if (seed.startsWith("flower"))
+        return `https://api.dicebear.com/7.x/icons/svg?seed=${seed}`;
+
+    if (seed.startsWith("fruit"))
+        return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
+
+    if (seed.startsWith("fun"))
+        return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
+
+    return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+}
+
+/* ---------- LOAD LEADERBOARD ---------- */
 
 fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
 .then(res => res.json())
 .then(scores => {
 
-    let tbody =
+    const tbody =
         document.querySelector("#leaderboardTable tbody");
 
     scores.forEach((score, index) => {
@@ -49,10 +71,20 @@ fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
             rowClass = "current-user";
         }
 
-        let row = `
+        const row = `
             <tr class="${rowClass}">
                 <td>${rank}</td>
-                <td>${score.username}</td>
+
+                <td style="display:flex;align-items:center;gap:10px;">
+                    <img
+                        src="${getAvatarUrl(score.avatar)}"
+                        width="40"
+                        height="40"
+                        style="border-radius:50%;border:2px solid #60a5fa;"
+                    >
+                    ${score.username}
+                </td>
+
                 <td>${score.wpm}</td>
                 <td>${score.accuracy}%</td>
             </tr>
@@ -63,6 +95,7 @@ fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
 
 })
 .catch(err => console.error(err));
+
 </script>
 
 </body>
