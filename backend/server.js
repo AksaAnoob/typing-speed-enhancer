@@ -176,11 +176,28 @@ app.post("/save-burst-score", async (req, res) => {
 });
 app.get("/leaderboard", async (req, res) => {
     try {
+
         const scores = await Score.find()
             .sort({ wpm: -1 })
             .limit(10);
 
-        res.json(scores);
+        const leaderboard = await Promise.all(
+            scores.map(async (score) => {
+
+                const user = await User.findOne({
+                    username: score.username
+                });
+
+                return {
+                    username: score.username,
+                    wpm: score.wpm,
+                    accuracy: score.accuracy,
+                    avatar: user?.avatar || null
+                };
+            })
+        );
+
+        res.json(leaderboard);
 
     } catch (error) {
         console.error(error);
@@ -197,7 +214,22 @@ app.get("/burst-leaderboard", async (req, res) => {
             .sort({ score: -1 })
             .limit(10);
 
-        res.json(scores);
+        const leaderboard = await Promise.all(
+            scores.map(async (score) => {
+
+                const user = await User.findOne({
+                    username: score.username
+                });
+
+                return {
+                    username: score.username,
+                    score: score.score,
+                    avatar: user?.avatar || null
+                };
+            })
+        );
+
+        res.json(leaderboard);
 
     } catch (error) {
 
