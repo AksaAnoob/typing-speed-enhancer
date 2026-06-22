@@ -1,64 +1,261 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Typing Speed Enhancer</title>
-  <link rel="stylesheet" href="style.css">
+<title>Type Mastery</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    overflow-x:hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+
+    background:url("img.png") no-repeat center center/cover;
+
+    position:relative;
+}
+
+/* Dark Overlay */
+body::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,0.55);
+
+    z-index:1;
+}
+
+/* Floating Glow */
+.glow{
+    position:absolute;
+    width:400px;
+    height:400px;
+
+    background:#38bdf8;
+
+    filter:blur(150px);
+    opacity:0.25;
+    border-radius:50%;
+
+    animation:moveGlow 6s infinite alternate;
+
+    z-index:1;
+}
+
+@keyframes moveGlow{
+    from{
+        transform:translate(-200px,-200px);
+    }
+    to{
+        transform:translate(200px,200px);
+    }
+}
+
+/* Particles */
+.particle{
+    position:absolute;
+
+    width:8px;
+    height:8px;
+
+    background:white;
+
+    border-radius:50%;
+
+    opacity:0.3;
+
+    animation:float 8s infinite linear;
+
+    z-index:2;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(100vh) scale(0);
+    }
+
+    100%{
+        transform:translateY(-10vh) scale(1);
+    }
+}
+
+/* Main Container */
+.container{
+    text-align:center;
+    width:90%;
+    max-width:800px;
+    z-index:3;
+}
+
+/* Heading */
+h1{
+
+    font-size:clamp(2rem, 8vw, 4rem);
+
+    letter-spacing:4px;
+
+    text-transform:uppercase;
+
+    overflow:hidden;
+
+    border-right:3px solid white;
+
+    display:inline-block;
+
+    white-space:nowrap;
+
+    width:0;
+
+    animation:
+        typing 3s steps(12) forwards,
+        blink 0.8s infinite;
+}
+
+@keyframes typing{
+    from{
+        width:0;
+    }
+    to{
+        width:100%;
+    }
+}
+
+@keyframes blink{
+    50%{
+        border-color:transparent;
+    }
+}
+
+/* Subtitle */
+p{
+    margin-top:15px;
+
+    font-size:1.2rem;
+
+    opacity:0.9;
+
+    padding:0 10px;
+}
+
+/* Button */
+button{
+
+    margin-top:30px;
+
+    padding:14px 28px;
+
+    font-size:1rem;
+
+    border:none;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    background:#07aaf0;
+
+    color:#0f172a;
+
+    font-weight:bold;
+
+    transition:0.3s;
+}
+
+button:hover{
+
+    transform:scale(1.08);
+
+    background:white;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width:768px){
+
+    h1{
+        letter-spacing:2px;
+    }
+
+    p{
+        font-size:1rem;
+    }
+
+    button{
+        width:220px;
+        max-width:90%;
+    }
+
+    .glow{
+        width:250px;
+        height:250px;
+    }
+}
+
+</style>
 </head>
+
 <body>
-<script> window.location.href = "splash.html";</script>
-<h1>TYPE MASTERY ⚡</h1>
-<h3 id="welcomeUser"></h3>
-<div class="stats">
 
-    <div class="card">
-        <h3>Timer</h3>
-        <p id="timer">60</p>
-    </div>
+<div class="glow"></div>
 
-    <div class="card">
-        <h3>WPM</h3>
-        <p id="liveWpm">0</p>
-    </div>
+<div class="container">
 
-    <div class="card">
-        <h3>Accuracy</h3>
-        <p id="liveAccuracy">100%</p>
-    </div>
+    <h1>TYPE MASTERY</h1>
+
+    <p>
+        Improve Your Typing Speed & Accuracy
+    </p>
+
+    <button onclick="goNext()">
+        Start Practice
+    </button>
 
 </div>
-<div class="difficulty-container">
-    <label for="difficulty">Difficulty:</label>
 
-    <select id="difficulty">
-        <option value="easy">Easy</option>
-        <option value="medium" selected>Medium</option>
-        <option value="hard">Hard</option>
-    </select>
-</div>
-<div id="textToType">Click Start to begin</div>
-<textarea id="inputBox" placeholder="Start typing here..."></textarea>
+<script>
 
-<br>
+function goNext(){
+    window.location.href = "home.html";
+}
 
-<button onclick="startTest()">Start</button>
-<button onclick="finishTest()">Done</button>
+/* Floating Particles */
 
+for(let i = 0; i < 25; i++){
 
+    let p = document.createElement("div");
 
-<!-- RESULT BOX -->
-<div id="result" style="display:none;">
-  <h2>Results</h2>
+    p.className = "particle";
 
-  <p id="wpmResult"></p>
-  <p id="accuracyResult"></p>
+    p.style.left = Math.random() * 100 + "vw";
 
-  <pre id="mistakeResult"></pre>
+    p.style.animationDuration =
+        (3 + Math.random() * 5) + "s";
 
-  <button onclick="restartTest()">Try Again</button>
-</div>
- 
+    p.style.opacity = Math.random();
 
-<script src="script.js"></script>
+    document.body.appendChild(p);
+}
+
+</script>
 
 </body>
 </html>

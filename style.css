@@ -442,3 +442,132 @@ body.bg {
 .avatar-grid img:hover {
     border: 2px solid #38bdf8;
 }
+/* ================= MOBILE RESPONSIVE ================= */
+
+@media screen and (max-width: 768px) {
+
+    body {
+        padding: 10px;
+        overflow-x: hidden;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Typing text */
+    #textToType {
+        width: 95%;
+        height: 180px;
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    textarea {
+        width: 95%;
+        font-size: 16px;
+        padding: 15px;
+    }
+
+    /* Timer */
+    #timer {
+        width: 90px;
+        font-size: 1.5rem;
+        padding: 10px;
+    }
+
+    /* Cards */
+    .stats {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .card,
+    .stat {
+        width: 90%;
+        max-width: 350px;
+    }
+
+    /* Mode cards */
+    .mode-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mode-card {
+        width: 90%;
+        padding: 20px;
+    }
+
+    /* Tables */
+    table {
+        width: 100%;
+        font-size: 14px;
+        display: block;
+        overflow-x: auto;
+    }
+
+    th,
+    td {
+        padding: 10px;
+    }
+
+    /* Burst mode */
+    #wordBox {
+        width: 90%;
+        font-size: 24px;
+    }
+
+    #wordInput {
+        width: 90%;
+        font-size: 18px;
+    }
+
+    /* Profile page */
+    .profile-container {
+        width: 95%;
+    }
+
+    .header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .avatar {
+        width: 90px;
+        height: 90px;
+    }
+
+    /* Avatar popup */
+    .modal-content {
+        width: 90%;
+        max-width: 350px;
+    }
+
+    .avatar-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .avatar-grid img {
+        width: 55px;
+        height: 55px;
+    }
+
+    /* Buttons */
+    button {
+        width: 90%;
+        max-width: 300px;
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    /* Results */
+    #result {
+        width: 95%;
+    }
+}

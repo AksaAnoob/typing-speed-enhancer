@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Typing Speed Enhancer</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<h1>TYPE MASTERY ⚡</h1>
+<h3 id="welcomeUser"></h3>
+<div class="stats">
+
+    <div class="card">
+        <h3>Timer</h3>
+        <p id="timer">60</p>
+    </div>
+
+    <div class="card">
+        <h3>WPM</h3>
+        <p id="liveWpm">0</p>
+    </div>
+
+    <div class="card">
+        <h3>Accuracy</h3>
+        <p id="liveAccuracy">100%</p>
+    </div>
+
+</div>
+<div class="difficulty-container">
+    <label for="difficulty">Difficulty:</label>
+
+    <select id="difficulty">
+        <option value="easy">Easy</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Hard</option>
+    </select>
+</div>
+<div id="textToType">Click Start to begin</div>
+<textarea id="inputBox" placeholder="Start typing here..."></textarea>
+
+<br>
+
+<button onclick="startTest()">Start</button>
+<button onclick="finishTest()">Done</button>
+
+
+
+<!-- RESULT BOX -->
+<div id="result" style="display:none;">
+  <h2>Results</h2>
+
+  <p id="wpmResult"></p>
+  <p id="accuracyResult"></p>
+
+  <pre id="mistakeResult"></pre>
+
+  <button onclick="restartTest()">Try Again</button>
+</div>
+ 
+
+<script src="script.js"></script>
+
+</body>
+</html>
