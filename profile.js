@@ -1,6 +1,6 @@
 let selectedAvatar = null;
 
-const backendURL = "https://typing-speed-enhancer-1.onrender.com/profile/${username}";
+const backendURL =  "https://typing-speed-enhancer-1.onrender.com";
 
 const username = localStorage.getItem("username");
 
@@ -20,10 +20,10 @@ fetch(`${backendURL}/profile/${username}`)
     // avatar load
     if (data.avatar) {
         document.getElementById("avatar").src =
-            `https://api.dicebear.com/7.x/initials/svg?seed=${data.avatar}`;
+            `https://api.dicebear.com/7.x/identicon/svg?seed=${data.avatar}`;
     } else {
         document.getElementById("avatar").src =
-            `https://api.dicebear.com/7.x/initials/svg?seed=${username}`;
+            `https://api.dicebear.com/7.x/identicon/svg?seed=${username}`;
     }
 
 })
