@@ -1,6 +1,30 @@
 const currentUser =
     localStorage.getItem("username");
 
+/* ---------- AVATAR URL HELPER ---------- */
+
+function getAvatarUrl(seed) {
+
+    if (!seed)
+        return "https://api.dicebear.com/7.x/adventurer/svg?seed=guest";
+
+    if (seed.startsWith("animal"))
+        return `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
+
+    if (seed.startsWith("flower"))
+        return `https://api.dicebear.com/7.x/icons/svg?seed=${seed}`;
+
+    if (seed.startsWith("fruit"))
+        return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
+
+    if (seed.startsWith("fun"))
+        return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
+
+    return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+}
+
+/* ---------- LOAD LEADERBOARD ---------- */
+
 fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
 .then(res => res.json())
 .then(data => {
@@ -9,7 +33,7 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
         <table>
             <tr>
                 <th>Rank</th>
-                <th>Username</th>
+                <th>Player</th>
                 <th>Score</th>
             </tr>
     `;
@@ -32,7 +56,17 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
         html += `
             <tr class="${rowClass}">
                 <td>${rank}</td>
-                <td>${player.username}</td>
+
+                <td style="display:flex;align-items:center;gap:10px;">
+                    <img
+                        src="${getAvatarUrl(player.avatar)}"
+                        width="40"
+                        height="40"
+                        style="border-radius:50%;border:2px solid #60a5fa;"
+                    >
+                    ${player.username}
+                </td>
+
                 <td>${player.score}</td>
             </tr>
         `;
