@@ -1,11 +1,33 @@
 let selectedAvatar = null;
 
-const backendURL =  "https://typing-speed-enhancer-1.onrender.com";
-
+const backendURL = "https://typing-speed-enhancer-1.onrender.com";
 const username = localStorage.getItem("username");
 
 document.getElementById("username").innerText =
     username || "Guest";
+
+/* ---------------- AVATAR MAPPER ---------------- */
+
+function getAvatarUrl(seed) {
+
+    if (!seed) {
+        return `https://api.dicebear.com/7.x/adventurer/svg?seed=${username}`;
+    }
+
+    if (seed.startsWith("animal")) {
+        return `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
+    }
+
+    if (seed.startsWith("flower")) {
+        return `https://api.dicebear.com/7.x/icons/svg?seed=${seed}`;
+    }
+
+    if (seed.startsWith("fruit")) {
+        return `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
+    }
+
+    return `https://api.dicebear.com/7.x/identicon/svg?seed=${seed}`;
+}
 
 /* ---------------- PROFILE LOAD ---------------- */
 
@@ -18,16 +40,11 @@ fetch(`${backendURL}/profile/${username}`)
     document.getElementById("bestBurst").innerText = data.burstScore;
 
     // avatar load
-    if (data.avatar) {
-        document.getElementById("avatar").src =
-            `https://api.dicebear.com/7.x/identicon/svg?seed=${data.avatar}`;
-    } else {
-        document.getElementById("avatar").src =
-            `https://api.dicebear.com/7.x/identicon/svg?seed=${username}`;
-    }
+    document.getElementById("avatar").src =
+        getAvatarUrl(data.avatar || username);
 
 })
-.catch(err => console.error(err));
+.catch(err => console.error("Profile load error:", err));
 
 /* ---------------- AVATAR UI ---------------- */
 
@@ -43,10 +60,10 @@ function selectAvatar(id) {
     selectedAvatar = id;
 
     document.getElementById("avatar").src =
-        `https://api.dicebear.com/7.x/identicon/svg?seed=${id}`;
+        getAvatarUrl(id);
 }
 
-/* ---------------- SAVE TO BACKEND ---------------- */
+/* ---------------- SAVE AVATAR ---------------- */
 
 function saveAvatar() {
 
@@ -67,5 +84,5 @@ function saveAvatar() {
         alert("Avatar updated!");
         closeAvatarPicker();
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error("Avatar save error:", err));
 }

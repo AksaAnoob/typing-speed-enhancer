@@ -3,6 +3,51 @@
 <head>
     <title>My Profile</title>
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        .hidden { display: none; }
+
+        .avatar-grid img {
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            margin: 5px;
+            transition: 0.2s;
+            border-radius: 10px;
+        }
+
+        .avatar-grid img:hover {
+            transform: scale(1.1);
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .glass-card {
+            padding: 20px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 
 <body class="bg">
@@ -15,8 +60,10 @@
     <div class="glass-card header">
 
         <div class="avatar-section">
+
+            <!-- IMPORTANT: no fixed avatar source -->
             <img id="avatar" class="avatar"
-                 src="https://api.dicebear.com/7.x/initials/svg?seed=User">
+                 src="https://api.dicebear.com/7.x/identicon/svg?seed=loading">
 
             <button onclick="openAvatarPicker()">Change Avatar</button>
         </div>
@@ -55,11 +102,28 @@
         <h2>Select Avatar</h2>
 
         <div class="avatar-grid">
-            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=1" onclick="selectAvatar('identicon1')">
-            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=2" onclick="selectAvatar('identicon2')">
-            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=3" onclick="selectAvatar('identicon3')">
-            <img src="https://api.dicebear.com/7.x/identicon/svg?seed=4" onclick="selectAvatar('identicon4')">
+
+            <!-- ANIMALS -->
+            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=animal1" onclick="selectAvatar('animal1')">
+            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=animal2" onclick="selectAvatar('animal2')">
+            <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=animal3" onclick="selectAvatar('animal3')">
+
+            <!-- FLOWERS -->
+            <img src="https://api.dicebear.com/7.x/icons/svg?seed=flower1" onclick="selectAvatar('flower1')">
+            <img src="https://api.dicebear.com/7.x/icons/svg?seed=flower2" onclick="selectAvatar('flower2')">
+            <img src="https://api.dicebear.com/7.x/icons/svg?seed=flower3" onclick="selectAvatar('flower3')">
+
+            <!-- FRUITS -->
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=fruit1" onclick="selectAvatar('fruit1')">
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=fruit2" onclick="selectAvatar('fruit2')">
+
+            <!-- FUN -->
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=fun1" onclick="selectAvatar('fun1')">
+            <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=fun2" onclick="selectAvatar('fun2')">
+
         </div>
+
+        <br>
 
         <button onclick="saveAvatar()">Save</button>
         <button onclick="closeAvatarPicker()">Close</button>
