@@ -205,7 +205,15 @@ textarea{
 textarea::placeholder {
 color: #cbd5e1;
 }
-
+#eventInput {
+    width: 60%;
+    padding: 15px;
+    font-size: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+}
 button{
     background:#2563eb;
     color:white;
@@ -381,7 +389,36 @@ body.bg {
     align-items: center;
     justify-content: space-between;
 }
+   .home-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 60px;
+    height: 60px;
+    
+    background: #1e293b;
+    color: white !important;
+    border-radius: 50%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    font-size: 24px;
+    text-decoration: none !important;
+    
+    box-shadow: 0 0 15px rgba(96,165,250,0.5);
+    
+    z-index: 999;
+    transition: 0.2s;
+}
 
+.home-btn:hover {
+    transform: translateX(-50%) scale(1.1);
+    background: #2563eb;
+}
 /* avatar */
 .avatar {
     width: 80px;

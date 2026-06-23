@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Mode - Type Mastery</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+<h1>⚡ Event Mode</h1>
+
+<h2 id="eventTitle">Choose a Mode</h2>
+
+<div id="eventBox">Press a mode to start</div>
+
+<input id="eventInput" type="text" placeholder="Type here..." autocomplete="off" disabled>
+
+<div class="mode-container">
+    <button onclick="startEventMode('rain')">🌧 Rain Mode</button>
+    <button onclick="startEventMode('fire')">🔥 Fire Mode</button>
+    <button onclick="startEventMode('chaos')">⚡ Chaos Mode</button>
+</div>
+
+<div id="eventScore">Score: 0</div>
+
+<script src="word.js"></script>
+<script src="sentence.js"></script>
+<script src="eventModes.js"></script>
+
+</body>
+</html>

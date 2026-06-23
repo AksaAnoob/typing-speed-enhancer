@@ -1,83 +1,430 @@
-<!DOCTYPE html>
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Type Mastery</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Type Mastery</title>
+
 <style>
-    *{
-        margin:0;
-        padding:0;
-        box-sizing:border-box;
-        font-family:Arial,sans-serif;
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
+
+    position:relative;
+
+    background:
+    linear-gradient(
+        -45deg,
+        #020617,
+        #0f172a,
+        #031547,
+        #021e5b
+    );
+
+    background-size:400% 400%;
+
+    animation:
+    gradientMove 15s ease infinite;
+}
+
+@keyframes gradientMove{
+
+    0%{
+        background-position:0% 50%;
     }
 
-    body{
-        height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        background:linear-gradient(135deg,#0f172a,#1e293b,#3b82f6);
+    50%{
+        background-position:100% 50%;
     }
+
+    100%{
+        background-position:0% 50%;
+    }
+}
+
+/* Futuristic Grid */
+
+body::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+    linear-gradient(
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px
+    ),
+    linear-gradient(
+        90deg,
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px
+    );
+
+    background-size:50px 50px;
+
+    z-index:0;
+}
+
+/* Glow Orbs */
+
+.glow{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(120px);
+
+    opacity:.25;
+
+    animation:
+    floatGlow 10s ease-in-out infinite alternate;
+}
+
+.glow1{
+
+    width:350px;
+    height:350px;
+
+    background:#38bdf8;
+
+    top:-80px;
+    left:-80px;
+}
+
+.glow2{
+
+    width:350px;
+    height:350px;
+
+    background:#2563eb;
+
+    bottom:-80px;
+    right:-80px;
+}
+
+@keyframes floatGlow{
+
+    from{
+        transform:
+        translate(0,0);
+    }
+
+    to{
+        transform:
+        translate(120px,-80px);
+    }
+}
+
+/* Floating Letters */
+
+.background-letter{
+
+    position:absolute;
+
+    color:
+    rgba(255,255,255,0.05);
+
+    font-weight:bold;
+
+    pointer-events:none;
+
+    user-select:none;
+
+    z-index:1;
+
+    animation:
+    floatLetter linear infinite;
+}
+
+@keyframes floatLetter{
+
+    from{
+        transform:
+        translateY(110vh);
+    }
+
+    to{
+        transform:
+        translateY(-20vh);
+    }
+}
+
+/* Main Card */
+
+.card{
+
+    position:relative;
+
+    z-index:10;
+
+    width:90%;
+    max-width:480px;
+
+    padding:50px;
+
+    text-align:center;
+
+    border-radius:30px;
+
+    background:
+    rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(18px);
+
+    border:
+    1px solid rgba(255,255,255,0.12);
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.4);
+
+    animation:
+    fadeUp 1s ease;
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:
+        translateY(30px);
+    }
+
+    to{
+        opacity:1;
+        transform:
+        translateY(0);
+    }
+}
+
+.logo{
+
+    font-size:60px;
+
+    margin-bottom:15px;
+
+    animation:
+    pulse 2.5s infinite;
+}
+
+@keyframes pulse{
+
+    0%,100%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.08);
+    }
+}
+
+h1{
+
+    color:white;
+
+    font-size:3rem;
+
+    letter-spacing:5px;
+
+    margin-bottom:15px;
+
+    text-shadow:
+        0 0 15px rgba(56,189,248,.6),
+        0 0 30px rgba(56,189,248,.4);
+}
+
+.subtitle{
+
+    color:#cbd5e1;
+
+    line-height:1.8;
+
+    margin-bottom:35px;
+
+    font-size:1rem;
+}
+
+.btn{
+
+    display:block;
+
+    width:100%;
+
+    padding:15px;
+
+    margin:15px 0;
+
+    text-decoration:none;
+
+    color:white;
+
+    border-radius:15px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.login{
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #38bdf8
+    );
+}
+
+.login:hover{
+
+    transform:
+    translateY(-3px);
+
+    box-shadow:
+    0 0 25px rgba(56,189,248,.6);
+}
+
+.register{
+
+    background:
+    rgba(255,255,255,.08);
+
+    border:
+    1px solid rgba(255,255,255,.12);
+}
+
+.register:hover{
+
+    background:
+    rgba(255,255,255,.15);
+
+    transform:
+    translateY(-3px);
+}
+
+.footer{
+
+    margin-top:25px;
+
+    color:#94a3b8;
+
+    font-size:.9rem;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
 
     .card{
-        background:rgba(255,255,255,0.1);
-        backdrop-filter:blur(15px);
-        padding:40px;
-        border-radius:20px;
-        text-align:center;
-        color:white;
-        width:400px;
+        padding:35px;
     }
 
     h1{
-        margin-bottom:15px;
+        font-size:2rem;
     }
 
-    p{
-        margin-bottom:30px;
+    .logo{
+        font-size:45px;
     }
+}
 
-    .btn{
-        display:block;
-        width:100%;
-        margin:10px 0;
-        padding:12px;
-        border:none;
-        border-radius:10px;
-        cursor:pointer;
-        font-size:16px;
-        text-decoration:none;
-        color:white;
-        background:#2563eb;
-    }
-
-    .btn:hover{
-        transform:scale(1.03);
-    }
 </style>
-
-
 </head>
 
 <body>
 
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+
 <div class="card">
+
+    <div class="logo">⌨</div>
+
     <h1>TYPE MASTERY</h1>
 
+    <p class="subtitle">
+        Improve your typing speed,
+        accuracy and consistency through
+        focused practice and exciting challenges.
+    </p>
 
-<p>
-    Improve your typing speed,
-    accuracy and consistency.
-</p>
+    <a href="login.html" class="btn login">
+        Login
+    </a>
 
-<a href="login.html" class="btn">Login</a>
+    <a href="register.html" class="btn register">
+        Register
+    </a>
 
-<a href="register.html" class="btn">Register</a>
-
+    <div class="footer">
+        Master the keyboard. One keystroke at a time.
+    </div>
 
 </div>
 
+<script>
+
+/* Floating Background Elements */
+
+const items = [
+"A","S","D","F",
+"J","K","L",";",
+"WPM",
+"ACCURACY",
+"SPEED",
+"TYPING",
+"FOCUS"
+];
+
+for(let i=0;i<35;i++){
+
+    let el =
+    document.createElement("div");
+
+    el.className =
+    "background-letter";
+
+    el.innerText =
+    items[
+    Math.floor(
+    Math.random()*items.length
+    )];
+
+    el.style.left =
+    Math.random()*100 + "vw";
+
+    el.style.animationDuration =
+    (10 + Math.random()*15) + "s";
+
+    el.style.fontSize =
+    (1.5 + Math.random()*3) + "rem";
+
+    document.body.appendChild(el);
+}
+
+</script>
+
 </body>
 </html>
+
