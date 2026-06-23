@@ -1,5 +1,6 @@
 let score = 0;
 let combo = 0;
+
 const words = [
     "apple", "computer", "keyboard", "monitor", "internet",
     "python", "javascript", "mongodb", "database", "project",
@@ -10,7 +11,6 @@ const words = [
 let time = 60;
 let interval = null;
 let currentWord = "";
-
 let feverMode = false;
 
 /* ---------- LOAD WORD ---------- */
@@ -33,6 +33,9 @@ function startBurst() {
     document.getElementById("score").innerText = score;
     document.getElementById("combo").innerText = combo;
     document.getElementById("timer").innerText = time;
+
+    document.getElementById("comboStatus").innerText =
+        "Start Typing...";
 
     const input = document.getElementById("wordInput");
 
@@ -62,6 +65,9 @@ function finishBurst() {
     clearInterval(interval);
 
     document.getElementById("wordInput").disabled = true;
+
+    document.getElementById("comboStatus").innerText =
+        "Game Over";
 
     const username = localStorage.getItem("username");
 
@@ -97,14 +103,14 @@ document.getElementById("wordInput")
 
         if (combo > 10) combo = 10;
 
-        /* ---------- MULTIPLIER ---------- */
-        let multiplier = 1;
-
-        if (combo >= 7) multiplier = 2;
-        else if (combo >= 4) multiplier = 1.5;
-        else multiplier = 1;
-
-        score += 1 * multiplier;
+        /* ---------- SCORE SYSTEM ---------- */
+        if (combo >= 7) {
+            score += 3;
+        } else if (combo >= 4) {
+            score += 2;
+        } else {
+            score += 1;
+        }
 
         /* ---------- TIME BONUS ---------- */
         if (combo % 3 === 0) {
@@ -121,6 +127,17 @@ document.getElementById("wordInput")
         document.getElementById("score").innerText = Math.floor(score);
         document.getElementById("combo").innerText = combo;
 
+        /* ---------- COMBO STATUS ---------- */
+        if (combo === 10) {
+            document.getElementById("comboStatus").innerText = "⚡ FEVER MODE!";
+        } else if (combo >= 7) {
+            document.getElementById("comboStatus").innerText = "🔥 God Streak!";
+        } else if (combo >= 4) {
+            document.getElementById("comboStatus").innerText = "🔥 Streak Active";
+        } else {
+            document.getElementById("comboStatus").innerText = "👍 Keep Going";
+        }
+
         this.value = "";
         loadWord();
     }
@@ -133,9 +150,13 @@ document.getElementById("wordInput")
 
         combo = 0;
         feverMode = false;
+
         document.body.style.boxShadow = "none";
 
         document.getElementById("combo").innerText = combo;
+
+        document.getElementById("comboStatus").innerText =
+            "💔 Reset! Focus again";
 
         this.value = "";
     }

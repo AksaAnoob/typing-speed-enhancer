@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        /* small improvement for combo highlight */
         #combo {
             color: #f59e0b;
             font-size: 2rem;
@@ -48,6 +47,15 @@
                 width: 80%;
             }
         }
+
+        /* NEW: combo status style */
+        #comboStatus {
+            margin-top: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #38bdf8;
+            text-shadow: 0 0 10px #38bdf8;
+        }
     </style>
 </head>
 
@@ -72,6 +80,12 @@
         <p id="combo">0</p>
     </div>
 
+</div>
+
+<!-- 🔥 NEW COMBO STATUS CARD -->
+<div class="card">
+    <h3>Combo Status</h3>
+    <p id="comboStatus">Start Typing...</p>
 </div>
 
 <div id="wordBox">
