@@ -274,6 +274,7 @@ app.get("/profile/:username", async (req, res) => {
     }
 });
 app.post("/updateAvatar", async (req, res) => {
+
     const { username, avatar } = req.body;
 
     await User.findOneAndUpdate(

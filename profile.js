@@ -44,31 +44,24 @@ function closeAvatarPicker() {
 
 /* ---------------- AVATAR SELECT ---------------- */
 
-function selectAvatar(id, event) {
+function selectAvatar(id) {
 
     selectedAvatar = id;
 
-    document.getElementById("avatar").src =
-        getAvatarUrl(id);
+    const avatarUrl =
+        `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${id}`;
 
-    // remove previous highlight
-    document.querySelectorAll(".avatar-grid img")
-        .forEach(img => img.style.outline = "none");
-
-    // highlight selected
-    if (event && event.target) {
-        event.target.style.outline = "3px solid #00ffcc";
-    }
+    document.getElementById("avatar").src = avatarUrl;
 }
 
 /* ---------------- SAVE AVATAR ---------------- */
 
 function saveAvatar() {
 
-    if (!selectedAvatar) {
-        alert("Please select an avatar first!");
-        return;
-    }
+    if (!selectedAvatar) return;
+
+    const avatarUrl =
+        `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${selectedAvatar}`;
 
     fetch(`${backendURL}/updateAvatar`, {
         method: "POST",
@@ -77,13 +70,12 @@ function saveAvatar() {
         },
         body: JSON.stringify({
             username: username,
-            avatar: selectedAvatar
+            avatar: avatarUrl   // 🔥 STORE FULL URL
         })
     })
     .then(res => res.json())
     .then(() => {
         alert("Avatar updated!");
         closeAvatarPicker();
-    })
-    .catch(err => console.error("Avatar save error:", err));
+    });
 }
