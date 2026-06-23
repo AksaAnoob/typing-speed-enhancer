@@ -448,7 +448,8 @@ body.bg {
 
     body {
         padding: 10px;
-        overflow-x: hidden;
+        overflow-y: auto;
+overflow-x: hidden;;
     }
 
     h1 {
@@ -509,7 +510,8 @@ body.bg {
         width: 100%;
         font-size: 14px;
         display: block;
-        overflow-x: auto;
+        overflow-y: auto;
+overflow-x: hidden;;
     }
 
     th,
@@ -557,6 +559,23 @@ body.bg {
         width: 55px;
         height: 55px;
     }
+    /* FIX FOR MOBILE VIEW */
+body {
+    overflow-x: hidden;
+}
+
+#textToType, #wordBox, input {
+    width: 90%;
+    max-width: 600px;
+}
+
+input {
+    width: 90%;
+}
+
+* {
+    box-sizing: border-box;
+}
     body {
     background-color: #0f172a;  /* shows instantly */
     background: url("img.png") no-repeat center center/cover;
