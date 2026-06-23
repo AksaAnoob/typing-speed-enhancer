@@ -1,22 +1,24 @@
 let score = 0;
 let combo = 0;
 
-const words = [
-    "apple", "computer", "keyboard", "monitor", "internet",
-    "python", "javascript", "mongodb", "database", "project",
-    "student", "science", "technology", "developer", "challenge",
-    "practice", "accuracy", "speed", "coding", "software"
-];
-
 let time = 60;
 let interval = null;
 let currentWord = "";
+
 let feverMode = false;
+
+/* ---------- DIFFICULTY LEVEL ---------- */
+let level = "easy";
+
+/* ---------- GET RANDOM WORD ---------- */
+function getRandomWord() {
+    const list = WORD_BANK[level];
+    return list[Math.floor(Math.random() * list.length)];
+}
 
 /* ---------- LOAD WORD ---------- */
 function loadWord() {
-    let index = Math.floor(Math.random() * words.length);
-    currentWord = words[index];
+    currentWord = getRandomWord();
     document.getElementById("wordBox").innerText = currentWord;
 }
 
@@ -27,6 +29,7 @@ function startBurst() {
     combo = 0;
     time = 60;
     feverMode = false;
+    level = "easy";
 
     document.body.style.boxShadow = "none";
 
@@ -121,6 +124,15 @@ document.getElementById("wordInput")
         if (combo === 10) {
             feverMode = true;
             document.body.style.boxShadow = "0 0 50px gold";
+        }
+
+        /* ---------- LEVEL SYSTEM ---------- */
+        if (score >= 20) {
+            level = "hard";
+        } else if (score >= 10) {
+            level = "medium";
+        } else {
+            level = "easy";
         }
 
         /* ---------- UI UPDATE ---------- */
