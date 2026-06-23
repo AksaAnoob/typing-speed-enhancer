@@ -1,14 +1,26 @@
-const currentUser =
-    localStorage.getItem("username");
-
-/* ---------- AVATAR URL HELPER ---------- */
-
+const currentUser = localStorage.getItem("username");
 
 /* ---------- LOAD LEADERBOARD ---------- */
 
 fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
 .then(res => res.json())
 .then(data => {
+
+    const container = document.getElementById("leaderboard");
+
+    /* ---------- FIX: TIE SAFE RANKING ---------- */
+    let rank = 1;
+
+    for (let i = 0; i < data.length; i++) {
+
+        if (i > 0 && data[i].score < data[i - 1].score) {
+            rank = i + 1;
+        }
+
+        data[i].rank = rank;
+    }
+
+    /* ---------- BUILD TABLE ---------- */
 
     let html = `
         <table>
@@ -19,14 +31,7 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
             </tr>
     `;
 
-    data.forEach((player, index) => {
-
-        let rank;
-
-        if (index === 0) rank = "🥇";
-        else if (index === 1) rank = "🥈";
-        else if (index === 2) rank = "🥉";
-        else rank = index + 1;
+    data.forEach(player => {
 
         let rowClass = "";
 
@@ -34,21 +39,25 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
             rowClass = "current-user";
         }
 
+        let displayRank =
+            player.rank === 1 ? "🥇" :
+            player.rank === 2 ? "🥈" :
+            player.rank === 3 ? "🥉" :
+            player.rank;
+
         html += `
             <tr class="${rowClass}">
-                <td>${rank}</td>
+                <td>${displayRank}</td>
 
                 <td style="display:flex;align-items:center;gap:10px;">
-
-    <img
-        src="${player.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=guest'}"
-        width="40"
-        height="40"
-        style="border-radius:50%"
-    >
-
-    ${player.username}
-</td>
+                    <img
+                        src="${player.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=guest'}"
+                        width="40"
+                        height="40"
+                        style="border-radius:50%"
+                    >
+                    ${player.username}
+                </td>
 
                 <td>${player.score}</td>
             </tr>
@@ -57,6 +66,6 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
 
     html += "</table>";
 
-    document.getElementById("leaderboard").innerHTML = html;
+    container.innerHTML = html;
 })
 .catch(err => console.error(err));
