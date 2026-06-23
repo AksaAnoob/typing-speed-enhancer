@@ -32,7 +32,6 @@
             margin: 10px;
         }
 
-        /* mobile fix */
         @media (max-width: 600px) {
             .stats {
                 flex-direction: column;
@@ -48,12 +47,11 @@
             }
         }
 
-        /* NEW: combo status style */
+        /* NEW */
         #comboStatus {
-            margin-top: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
             color: #38bdf8;
+            font-weight: bold;
+            font-size: 1.2rem;
             text-shadow: 0 0 10px #38bdf8;
         }
     </style>
@@ -63,6 +61,7 @@
 
 <h1>BURST MODE ⚡</h1>
 
+<!-- ALL CARDS STAY TOGETHER -->
 <div class="stats">
 
     <div class="card">
@@ -80,12 +79,12 @@
         <p id="combo">0</p>
     </div>
 
-</div>
+    <!-- FIXED POSITION -->
+    <div class="card">
+        <h3>Combo Status</h3>
+        <p id="comboStatus">Start Typing...</p>
+    </div>
 
-<!-- 🔥 NEW COMBO STATUS CARD -->
-<div class="card">
-    <h3>Combo Status</h3>
-    <p id="comboStatus">Start Typing...</p>
 </div>
 
 <div id="wordBox">
