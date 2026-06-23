@@ -4,7 +4,53 @@
     <title>Burst Mode</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* small improvement for combo highlight */
+        #combo {
+            color: #f59e0b;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px #f59e0b;
+        }
+
+        #wordBox {
+            font-size: 32px;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            text-align: center;
+        }
+
+        button {
+            margin: 10px;
+        }
+
+        /* mobile fix */
+        @media (max-width: 600px) {
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #wordBox {
+                font-size: 24px;
+            }
+
+            input {
+                width: 80%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
 <h1>BURST MODE ⚡</h1>
@@ -20,10 +66,12 @@
         <h3>Score</h3>
         <p id="score">0</p>
     </div>
+
     <div class="card">
-    <h3>Combo</h3>
-    <p id="combo">0</p>
-</div>
+        <h3>Combo</h3>
+        <p id="combo">0</p>
+    </div>
+
 </div>
 
 <div id="wordBox">
@@ -38,13 +86,8 @@
 
 <br><br>
 
-<button onclick="startBurst()">
-    Start
-</button>
-
-<button onclick="finishBurst()">
-    End
-</button>
+<button onclick="startBurst()">Start</button>
+<button onclick="finishBurst()">End</button>
 
 <script src="burst.js"></script>
 

@@ -1,49 +1,37 @@
 let score = 0;
 let combo = 0;
 const words = [
-    "apple",
-    "computer",
-    "keyboard",
-    "monitor",
-    "internet",
-    "python",
-    "javascript",
-    "mongodb",
-    "database",
-    "project",
-    "student",
-    "science",
-    "technology",
-    "developer",
-    "challenge",
-    "practice",
-    "accuracy",
-    "speed",
-    "coding",
-    "software"
+    "apple", "computer", "keyboard", "monitor", "internet",
+    "python", "javascript", "mongodb", "database", "project",
+    "student", "science", "technology", "developer", "challenge",
+    "practice", "accuracy", "speed", "coding", "software"
 ];
 
 let time = 60;
 let interval = null;
 let currentWord = "";
 
+let feverMode = false;
+
+/* ---------- LOAD WORD ---------- */
 function loadWord() {
-
     let index = Math.floor(Math.random() * words.length);
-
     currentWord = words[index];
-
     document.getElementById("wordBox").innerText = currentWord;
 }
 
+/* ---------- START GAME ---------- */
 function startBurst() {
 
     score = 0;
-combo = 0;
-time = 60;
+    combo = 0;
+    time = 60;
+    feverMode = false;
+
+    document.body.style.boxShadow = "none";
 
     document.getElementById("score").innerText = score;
-    document.getElementById("combo").innerText = 0;
+    document.getElementById("combo").innerText = combo;
     document.getElementById("timer").innerText = time;
 
     const input = document.getElementById("wordInput");
@@ -59,7 +47,6 @@ time = 60;
     interval = setInterval(() => {
 
         time--;
-
         document.getElementById("timer").innerText = time;
 
         if (time <= 0) {
@@ -69,6 +56,7 @@ time = 60;
     }, 1000);
 }
 
+/* ---------- END GAME ---------- */
 function finishBurst() {
 
     clearInterval(interval);
@@ -78,8 +66,7 @@ function finishBurst() {
     const username = localStorage.getItem("username");
 
     if (username) {
-
-        fetch("http://localhost:5000/save-burst-score", {
+        fetch("https://typing-speed-enhancer-1.onrender.com/save-burst-score", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -97,42 +84,58 @@ function finishBurst() {
     alert("Time Up! Score: " + score);
 }
 
+/* ---------- INPUT HANDLER ---------- */
 document.getElementById("wordInput")
-.addEventListener("input", function() {
+.addEventListener("input", function () {
 
     let typed = this.value.trim();
 
-    // Correct word
+    /* ---------- CORRECT WORD ---------- */
     if (typed === currentWord) {
 
-        score++;
         combo++;
 
-        document.getElementById("score").innerText = score;
+        if (combo > 10) combo = 10;
 
-        if (combo >= 5) {
-            document.getElementById("combo").innerText =
-                "🔥 x" + combo;
-        } else {
-            document.getElementById("combo").innerText =
-                combo;
+        /* ---------- MULTIPLIER ---------- */
+        let multiplier = 1;
+
+        if (combo >= 7) multiplier = 2;
+        else if (combo >= 4) multiplier = 1.5;
+        else multiplier = 1;
+
+        score += 1 * multiplier;
+
+        /* ---------- TIME BONUS ---------- */
+        if (combo % 3 === 0) {
+            time += 1;
         }
 
-        this.value = "";
+        /* ---------- FEVER MODE ---------- */
+        if (combo === 10) {
+            feverMode = true;
+            document.body.style.boxShadow = "0 0 50px gold";
+        }
 
+        /* ---------- UI UPDATE ---------- */
+        document.getElementById("score").innerText = Math.floor(score);
+        document.getElementById("combo").innerText = combo;
+
+        this.value = "";
         loadWord();
     }
 
-    // Wrong word (user typed a space after wrong word)
+    /* ---------- WRONG WORD ---------- */
     else if (
         typed.length >= currentWord.length &&
         typed !== currentWord
     ) {
 
         combo = 0;
+        feverMode = false;
+        document.body.style.boxShadow = "none";
 
-        document.getElementById("combo").innerText =
-            combo;
+        document.getElementById("combo").innerText = combo;
 
         this.value = "";
     }
