@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Leaderboard - Type Mastery</title>
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -16,8 +15,14 @@
 
         h1 {
             margin-top: 20px;
+            font-size: 3rem;
+            font-weight: 800;
+            text-shadow:
+                0 0 10px rgba(96,165,250,0.8),
+                0 0 20px rgba(96,165,250,0.5);
         }
 
+        /* CENTER WRAPPER */
         .container {
             max-width: 900px;
             margin: auto;
@@ -30,12 +35,14 @@
             margin-top: 20px;
             border-radius: 12px;
             overflow: hidden;
+
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
         }
 
         th {
             background: #1e293b;
             padding: 12px;
-            color: white;
         }
 
         td {
@@ -53,6 +60,36 @@
             font-weight: bold;
         }
 
+        /* ================= BURST LOADING SCREEN ================= */
+        .loading-screen {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .loading-text {
+            font-size: 20px;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            margin-top: 15px;
+            border-radius: 50%;
+            background: #60a5fa;
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.4; }
+            50% { transform: scale(1.6); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.4; }
+        }
+
         .empty {
             margin-top: 30px;
             opacity: 0.7;
@@ -62,49 +99,42 @@
 
 <body>
 
-<h1>🏆 Leaderboard</h1>
+<h1>🏆 Typing Leaderboard</h1>
 
-<div class="container">
-    <table id="leaderboardTable">
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Player</th>
-                <th>WPM</th>
-                <th>Accuracy</th>
-            </tr>
-        </thead>
-
-        <tbody id="leaderboardBody"></tbody>
-    </table>
+<div id="leaderboard">
+    <div class="loading-screen">
+        <div class="loading-text">Loading...</div>
+        <div class="dot"></div>
+    </div>
 </div>
 
 <script>
 const currentUser = localStorage.getItem("username");
+const container = document.getElementById("leaderboard");
 
-/* ---------- LOAD LEADERBOARD ---------- */
+/* ---------- SHOW LOADING ---------- */
+container.innerHTML = `
+    <div class="loading-screen">
+        <div class="loading-text">Loading Leaderboard</div>
+        <div class="dot"></div>
+    </div>
+`;
+
+/* ---------- FETCH DATA ---------- */
 fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
 .then(res => res.json())
 .then(scores => {
 
-    const tbody = document.getElementById("leaderboardBody");
-
-    /* ---------- EMPTY STATE ---------- */
     if (!scores || scores.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="empty">No scores yet. Be the first 🔥</td>
-            </tr>
-        `;
+        container.innerHTML = `<p class="empty">No scores yet. Be the first 🔥</p>`;
         return;
     }
 
-    /* ---------- SORT SAFETY ---------- */
+    // sort
     scores.sort((a, b) => b.wpm - a.wpm);
 
-    /* ---------- RANKING ---------- */
+    // rank system
     let rank = 1;
-
     for (let i = 0; i < scores.length; i++) {
         if (i > 0 && scores[i].wpm < scores[i - 1].wpm) {
             rank = i + 1;
@@ -112,8 +142,16 @@ fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
         scores[i].rank = rank;
     }
 
-    /* ---------- BUILD TABLE ---------- */
-    let html = "";
+    let html = `
+        <div class="container">
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>WPM</th>
+                <th>Accuracy</th>
+            </tr>
+    `;
 
     scores.forEach(score => {
 
@@ -126,19 +164,21 @@ fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
             score.rank === 1 ? "🥇" :
             score.rank === 2 ? "🥈" :
             score.rank === 3 ? "🥉" :
-            score.rank;
+            "#" + score.rank;
+
+        const avatar =
+            score.avatar ||
+            `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(score.username)}`;
 
         html += `
             <tr class="${rowClass}">
                 <td>${displayRank}</td>
 
                 <td style="display:flex;align-items:center;gap:10px;justify-content:center;">
-                    <img
-                        src="${score.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=guest'}"
+                    <img src="${avatar}"
                         width="40"
                         height="40"
-                        style="border-radius:50%;border:2px solid #60a5fa;"
-                    >
+                        style="border-radius:50%;border:2px solid #60a5fa;">
                     ${score.username || "Unknown"}
                 </td>
 
@@ -148,15 +188,14 @@ fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
         `;
     });
 
-    tbody.innerHTML = html;
+    html += "</table></div>";
 
+    container.innerHTML = html;
 })
 .catch(err => {
     console.error(err);
-    document.getElementById("leaderboardBody").innerHTML = `
-        <tr>
-            <td colspan="4" class="empty">Failed to load leaderboard ❌</td>
-        </tr>
+    container.innerHTML = `
+        <p class="empty">Failed to load leaderboard ❌</p>
     `;
 });
 </script>

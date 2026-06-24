@@ -2,23 +2,76 @@
 <html>
 <head>
     <title>Event Leaderboard</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         body {
+            margin: 0;
             font-family: Arial;
             background: #0f172a;
             color: white;
             text-align: center;
         }
 
+        h1 {
+            margin-top: 25px;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+
+            color: white;
+
+            text-shadow:
+                0 0 10px rgba(96,165,250,0.9),
+                0 0 22px rgba(96,165,250,0.6),
+                0 0 35px rgba(96,165,250,0.4);
+        }
+
+        #leaderboard {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* 👈 IMPORTANT FIX */
+    padding-top: 10px;       /* 👈 pushes content upward */
+    min-height: 70vh;
+}
+
+        /* ================= BURST LOADING ================= */
+       .loading-screen {
+    height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+        .loading-text {
+            font-size: 18px;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            margin-top: 15px;
+            border-radius: 50%;
+            background: #60a5fa;
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.4; }
+            50% { transform: scale(1.6); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.4; }
+        }
+
         table {
-            width: 90%;
-            margin: 20px auto;
             border-collapse: collapse;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
+            width: 90%;
+            max-width: 750px;
+            margin-top: 20px;
+            border-radius: 12px;
             overflow: hidden;
         }
 
@@ -28,11 +81,42 @@
         }
 
         th {
-            background: rgba(255,255,255,0.1);
+            background: #1e293b;
+            color: white;
+        }
+
+        tr {
+            background: rgba(255,255,255,0.05);
+            transition: 0.2s;
         }
 
         tr:hover {
             background: rgba(96,165,250,0.15);
+        }
+
+        .current-user {
+            background: rgba(96,165,250,0.25);
+            font-weight: bold;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .empty {
+            margin-top: 30px;
+            opacity: 0.7;
         }
     </style>
 </head>
@@ -41,55 +125,96 @@
 
 <h1>⚡ Event Leaderboard</h1>
 
-<table>
-    <thead>
-        <tr>
-            <th>Rank</th>
-            <th>User</th>
-            <th>Score</th>
-            <th>Mode</th>
-        </tr>
-    </thead>
-
-    <tbody id="board"></tbody>
-</table>
+<div id="leaderboard">
+    <div class="loading-screen">
+        <div class="loading-text">Loading Leaderboard</div>
+        <div class="dot"></div>
+    </div>
+</div>
 
 <script>
-const API = "https://typing-speed-enhancer-1.onrender.com/event-leaderboard";
+const currentUser = localStorage.getItem("username");
+const container = document.getElementById("leaderboard");
 
-fetch(API)
+/* SHOW LOADING FIRST */
+container.innerHTML = `
+    <div class="loading-screen">
+        <div class="loading-text">Loading Leaderboard</div>
+        <div class="dot"></div>
+    </div>
+`;
+
+fetch("https://typing-speed-enhancer-1.onrender.com/event-leaderboard")
 .then(res => res.json())
 .then(data => {
 
-    // ✔ sort highest score first
+    if (!data || data.length === 0) {
+        container.innerHTML = `<p class="empty">No scores yet. Be the first 🔥</p>`;
+        return;
+    }
+
     data.sort((a, b) => b.score - a.score);
 
-    let html = "";
     let rank = 1;
-
     for (let i = 0; i < data.length; i++) {
-
-        // rank handling (ties safe)
         if (i > 0 && data[i].score < data[i - 1].score) {
             rank = i + 1;
         }
-
-        html += `
-        <tr>
-            <td>${rank}</td>
-            <td>${data[i].username}</td>
-            <td>${data[i].score}</td>
-            <td>${data[i].mode}</td>
-        </tr>
-        `;
+        data[i].rank = rank;
     }
 
-    document.getElementById("board").innerHTML = html;
+    let html = `
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Score</th>
+                <th>Mode</th>
+            </tr>
+    `;
+
+    data.forEach(player => {
+
+        const isCurrentUser =
+            currentUser && player.username === currentUser;
+
+        const rowClass = isCurrentUser ? "current-user" : "";
+
+        let displayRank = "";
+        if (player.rank === 1) displayRank = "🥇";
+        else if (player.rank === 2) displayRank = "🥈";
+        else if (player.rank === 3) displayRank = "🥉";
+        else displayRank = "#" + player.rank;
+
+        const avatar =
+            player.avatar ||
+            `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(player.username)}`;
+
+        html += `
+            <tr class="${rowClass}">
+                <td>${displayRank}</td>
+
+                <td>
+                    <div class="user-cell">
+                        <img class="avatar" src="${avatar}">
+                        <span>${player.username || "Unknown"}</span>
+                    </div>
+                </td>
+
+                <td>${player.score}</td>
+                <td>${player.mode || "event"}</td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+
+    container.innerHTML = html;
 })
 .catch(err => {
-    console.error("Leaderboard error:", err);
-    document.getElementById("board").innerHTML =
-        "<tr><td colspan='4'>Failed to load leaderboard</td></tr>";
+    console.error(err);
+    container.innerHTML =
+        `<p class="empty">Failed to load leaderboard ❌</p>`;
 });
 </script>
 

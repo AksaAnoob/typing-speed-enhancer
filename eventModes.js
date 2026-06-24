@@ -18,7 +18,9 @@ let eventInterval = null;
 let eventTimer = null;
 let timeLeft = 60;
 
-/* TIMER */
+const currentUser = localStorage.getItem("username");
+
+/* ================= TIMER ================= */
 function startTimer() {
     timeLeft = 60;
     document.getElementById("eventTimer").innerText = timeLeft;
@@ -33,11 +35,11 @@ function startTimer() {
     }, 1000);
 }
 
-/* START MODE */
+/* ================= START MODE ================= */
 function startEventMode(modeKey) {
 
     currentMode = EVENT_MODES[modeKey];
-    currentModeKey = modeKey; // 🔥 IMPORTANT FIX
+    currentModeKey = modeKey;
     eventScore = 0;
 
     clearInterval(eventInterval);
@@ -60,7 +62,7 @@ function startEventMode(modeKey) {
     }, currentMode.speed);
 }
 
-/* LOAD WORD */
+/* ================= LOAD WORD ================= */
 function loadText() {
     const pool = WORD_BANK.easy;
     currentWord = pool[Math.floor(Math.random() * pool.length)];
@@ -72,13 +74,11 @@ function loadText() {
             .join("");
 }
 
-/* TYPING */
+/* ================= TYPING ================= */
 function handleTyping() {
     const inputEl = document.getElementById("hiddenInput");
     const input = inputEl.value;
     const spans = document.querySelectorAll("#textDisplay span");
-
-    let correct = true;
 
     spans.forEach((span, i) => {
         const typed = input[i];
@@ -91,7 +91,6 @@ function handleTyping() {
             span.classList.add("correct");
         } else {
             span.classList.add("wrong");
-            correct = false;
         }
     });
 
@@ -104,7 +103,7 @@ function handleTyping() {
     }
 }
 
-/* STOP */
+/* ================= STOP MODE ================= */
 function stopEventMode(auto = false) {
     clearInterval(eventInterval);
     clearInterval(eventTimer);
@@ -117,7 +116,7 @@ function stopEventMode(auto = false) {
     saveEventScore();
 }
 
-/* SAVE SCORE */
+/* ================= SAVE SCORE ================= */
 function saveEventScore() {
 
     const username = localStorage.getItem("username");
@@ -132,7 +131,7 @@ function saveEventScore() {
         body: JSON.stringify({
             username,
             score: eventScore,
-            mode: currentModeKey // 🔥 FIXED HERE
+            mode: currentModeKey
         })
     })
     .then(res => res.json())
@@ -140,7 +139,91 @@ function saveEventScore() {
     .catch(err => console.error("SAVE ERROR:", err));
 }
 
-/* FOCUS */
+/* ================= EVENT LEADERBOARD (BURST STYLE FIXED) ================= */
+fetch("https://typing-speed-enhancer-1.onrender.com/event-leaderboard")
+.then(res => res.json())
+.then(data => {
+
+    const container = document.getElementById("leaderboard");
+
+    if (!data || data.length === 0) {
+        container.innerHTML = `<p class="empty">No scores yet. Be the first 🔥</p>`;
+        return;
+    }
+
+    // sort by score
+    data.sort((a, b) => b.score - a.score);
+
+    // rank calculation
+    let rank = 1;
+
+    for (let i = 0; i < data.length; i++) {
+        if (i > 0 && data[i].score < data[i - 1].score) {
+            rank = i + 1;
+        }
+        data[i].rank = rank;
+    }
+
+    let html = `
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Score</th>
+                <th>Mode</th>
+            </tr>
+    `;
+
+    data.forEach(player => {
+
+        const isCurrentUser =
+            currentUser && player.username === currentUser;
+
+        const rowClass = isCurrentUser ? "current-user" : "";
+
+        // 🥇 medals fix
+        let displayRank;
+        if (player.rank === 1) displayRank = "🥇";
+        else if (player.rank === 2) displayRank = "🥈";
+        else if (player.rank === 3) displayRank = "🥉";
+        else displayRank = `#${player.rank}`;
+
+        // 👤 REAL burst-style avatar (NOT letters)
+        const avatar =
+            player.avatar ||
+            `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(player.username)}`;
+
+        html += `
+            <tr class="${rowClass}">
+                <td>${displayRank}</td>
+
+                <td style="display:flex;align-items:center;gap:10px;justify-content:center;">
+                    <img
+                        src="${avatar}"
+                        width="40"
+                        height="40"
+                        style="border-radius:50%"
+                    >
+                    ${player.username || "Unknown"}
+                </td>
+
+                <td>${player.score}</td>
+                <td>${player.mode || "event"}</td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+
+    container.innerHTML = html;
+})
+.catch(err => {
+    console.error(err);
+    document.getElementById("leaderboard").innerHTML =
+        `<p class="empty">Failed to load leaderboard ❌</p>`;
+});
+
+/* ================= FOCUS INPUT ================= */
 function focusInput() {
     document.getElementById("hiddenInput").focus();
 }
