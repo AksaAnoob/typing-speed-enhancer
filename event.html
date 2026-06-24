@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>Event Mode - Type Mastery</title>
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -29,7 +28,6 @@
             border-radius: 10px;
         }
 
-        /* SINGLE TYPING BOX */
         .typing-box {
             width: 80%;
             margin: 20px auto;
@@ -66,23 +64,19 @@
 <body>
 
 <h1>⚡ Event Mode</h1>
-
 <h2 id="eventTitle">Choose Mode</h2>
 
-<!-- TIMER + SCORE -->
 <div class="stats">
     <div class="card">⏱ <span id="eventTimer">60</span></div>
     <div class="card">⭐ <span id="eventScore">0</span></div>
 </div>
 
-<!-- SINGLE TYPING BOX -->
 <div class="typing-box" onclick="focusInput()">
     <div id="textDisplay">Press a mode to start</div>
 </div>
 
 <input id="hiddenInput" oninput="handleTyping()" />
 
-<!-- BUTTONS -->
 <div>
     <button onclick="startEventMode('rain')">🌧 Rain</button>
     <button onclick="startEventMode('fire')">🔥 Fire</button>
@@ -92,12 +86,6 @@
 <script src="word.js"></script>
 <script src="sentence.js"></script>
 <script src="eventModes.js"></script>
-
-<script>
-function focusInput() {
-    document.getElementById("hiddenInput").focus();
-}
-</script>
 
 </body>
 </html>

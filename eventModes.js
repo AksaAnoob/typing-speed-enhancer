@@ -10,6 +10,7 @@ const EVENT_MODES = {
 };
 
 let currentMode = null;
+let currentModeKey = null;
 let currentWord = "";
 let eventScore = 0;
 
@@ -17,7 +18,7 @@ let eventInterval = null;
 let eventTimer = null;
 let timeLeft = 60;
 
-/* ---------------- TIMER ---------------- */
+/* TIMER */
 function startTimer() {
     timeLeft = 60;
     document.getElementById("eventTimer").innerText = timeLeft;
@@ -32,10 +33,11 @@ function startTimer() {
     }, 1000);
 }
 
-/* ---------------- START MODE ---------------- */
+/* START MODE */
 function startEventMode(modeKey) {
 
     currentMode = EVENT_MODES[modeKey];
+    currentModeKey = modeKey; // 🔥 IMPORTANT FIX
     eventScore = 0;
 
     clearInterval(eventInterval);
@@ -53,19 +55,13 @@ function startEventMode(modeKey) {
     startTimer();
 
     eventInterval = setInterval(() => {
-
         loadText();
-
-        // ❗ IMPORTANT FIX:
-        // If user is typing and word changes → clear input
-        input.value = "";
-
+        document.getElementById("hiddenInput").value = "";
     }, currentMode.speed);
 }
 
-/* ---------------- LOAD WORD ---------------- */
+/* LOAD WORD */
 function loadText() {
-
     const pool = WORD_BANK.easy;
     currentWord = pool[Math.floor(Math.random() * pool.length)];
 
@@ -76,16 +72,15 @@ function loadText() {
             .join("");
 }
 
-/* ---------------- INPUT HANDLER ---------------- */
+/* TYPING */
 function handleTyping() {
-
-    const input = document.getElementById("hiddenInput").value;
+    const inputEl = document.getElementById("hiddenInput");
+    const input = inputEl.value;
     const spans = document.querySelectorAll("#textDisplay span");
 
     let correct = true;
 
     spans.forEach((span, i) => {
-
         const typed = input[i];
 
         span.classList.remove("correct", "wrong");
@@ -100,20 +95,17 @@ function handleTyping() {
         }
     });
 
-    // ✅ WORD COMPLETED
     if (input === currentWord && currentWord.length > 0) {
-
         eventScore++;
         document.getElementById("eventScore").innerText = eventScore;
 
-        document.getElementById("hiddenInput").value = "";
+        inputEl.value = "";
         loadText();
     }
 }
 
-/* ---------------- STOP MODE ---------------- */
+/* STOP */
 function stopEventMode(auto = false) {
-
     clearInterval(eventInterval);
     clearInterval(eventTimer);
 
@@ -125,7 +117,7 @@ function stopEventMode(auto = false) {
     saveEventScore();
 }
 
-/* ---------------- SAVE TO DB ---------------- */
+/* SAVE SCORE */
 function saveEventScore() {
 
     const username = localStorage.getItem("username");
@@ -140,15 +132,15 @@ function saveEventScore() {
         body: JSON.stringify({
             username,
             score: eventScore,
-            mode: currentMode?.name || "event"
+            mode: currentModeKey // 🔥 FIXED HERE
         })
     })
     .then(res => res.json())
     .then(data => console.log("Saved:", data.message))
-    .catch(err => console.error(err));
+    .catch(err => console.error("SAVE ERROR:", err));
 }
 
-/* ---------------- FOCUS ---------------- */
+/* FOCUS */
 function focusInput() {
     document.getElementById("hiddenInput").focus();
 }
