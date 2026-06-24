@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const app = express();
 const Score = require("./models/Score");
 const BurstScore = require("./models/BurstScore");
+const EventScore = require("./models/EventScore");
 app.use(cors());
 app.use(express.json());
 
@@ -174,6 +175,14 @@ app.post("/save-burst-score", async (req, res) => {
         });
     }
 });
+app.post("/save-event-score", async (req, res) => {
+
+    console.log("🔥 ROUTE HIT");
+
+    console.log("BODY:", req.body);
+
+    return res.json({ ok: true });
+});
 app.get("/leaderboard", async (req, res) => {
     try {
 
@@ -235,6 +244,39 @@ app.get("/burst-leaderboard", async (req, res) => {
 
         console.error(error);
 
+        res.status(500).json({
+            message: "Server Error"
+        });
+    }
+});
+app.get("/event-leaderboard", async (req, res) => {
+
+    try {
+
+        const scores = await EventScore.find()
+            .sort({ score: -1 })
+            .limit(10);
+
+        const leaderboard = await Promise.all(
+            scores.map(async (score) => {
+
+                const user = await User.findOne({
+                    username: score.username
+                });
+
+                return {
+                    username: score.username,
+                    score: score.score,
+                    mode: score.mode,
+                    avatar: user?.avatar || null
+                };
+            })
+        );
+
+        res.json(leaderboard);
+
+    } catch (error) {
+        console.error(error);
         res.status(500).json({
             message: "Server Error"
         });
