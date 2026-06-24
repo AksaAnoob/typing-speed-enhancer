@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Leaderboard</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: rgba(255,255,255,0.1);
+        }
+
+        tr:hover {
+            background: rgba(96,165,250,0.15);
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>⚡ Event Leaderboard</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Score</th>
+            <th>Mode</th>
+        </tr>
+    </thead>
+
+    <tbody id="board"></tbody>
+</table>
+
+<script>
+const API = "https://typing-speed-enhancer-1.onrender.com/event-leaderboard";
+
+fetch(API)
+.then(res => res.json())
+.then(data => {
+
+    // ✔ sort highest score first
+    data.sort((a, b) => b.score - a.score);
+
+    let html = "";
+    let rank = 1;
+
+    for (let i = 0; i < data.length; i++) {
+
+        // rank handling (ties safe)
+        if (i > 0 && data[i].score < data[i - 1].score) {
+            rank = i + 1;
+        }
+
+        html += `
+        <tr>
+            <td>${rank}</td>
+            <td>${data[i].username}</td>
+            <td>${data[i].score}</td>
+            <td>${data[i].mode}</td>
+        </tr>
+        `;
+    }
+
+    document.getElementById("board").innerHTML = html;
+})
+.catch(err => {
+    console.error("Leaderboard error:", err);
+    document.getElementById("board").innerHTML =
+        "<tr><td colspan='4'>Failed to load leaderboard</td></tr>";
+});
+</script>
+
+</body>
+</html>

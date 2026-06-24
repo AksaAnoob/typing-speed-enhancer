@@ -4,64 +4,202 @@
     <title>Choose Mode</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        h2 {
+            opacity: 0.8;
+        }
+
+        /* ---------------- GRID ---------------- */
+
+        .mode-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        /* ---------------- CARD ---------------- */
+
+        .mode-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 16px 18px;
+            border-radius: 14px;
+
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(10px);
+
+            transition: 0.25s ease;
+            cursor: pointer;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* ---------------- LEFT SIDE ---------------- */
+
+        .mode-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+        }
+
+        /* FIXED ICON BOX (IMPORTANT CHANGE) */
+        .icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+
+        .text h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .text p {
+            margin: 4px 0 0;
+            font-size: 13px;
+            opacity: 0.7;
+        }
+
+        /* ---------------- BUTTON ---------------- */
+
+        button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #6366f1;
+        }
+
+        /* ---------------- MOBILE FIX ---------------- */
+
+        @media (max-width: 500px) {
+            .mode-card {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .text h2 {
+                font-size: 16px;
+            }
+        }
+
+    </style>
 </head>
+
 <body>
 
     <h1>TYPE MASTERY ⚡</h1>
-
     <h2>Choose Your Challenge</h2>
 
     <div class="mode-container">
-        <div class="mode-card">
-    <h2>👤 Profile</h2>
-    <p>View your personal stats.</p>
 
-    <button onclick="location.href='profile.html'">
-        Open
-    </button>
-</div>
-        
- <div class="mode-container">
+        <!-- PROFILE -->
         <div class="mode-card">
-    <h2>🎭 Event Mode</h2>
-    <p>Enjoy various fun modes.</p>
-
-    <button onclick="location.href='event.html'">
-        Open
-    </button>
-</div>
-        <div class="mode-card">
-            <h2>⌨️ Typing Mode</h2>
-            <p>Practice passages and improve WPM.</p>
-
-            <button onclick="location.href='typing.html'">
-                Play
-            </button>
+            <div class="mode-left">
+                <div class="icon">👤</div>
+                <div class="text">
+                    <h2>Profile</h2>
+                    <p>View your personal stats.</p>
+                </div>
+            </div>
+            <button onclick="location.href='profile.html'">Open</button>
         </div>
-        <div class="mode-card">
-    <h2>🏆 Typing Leaderboard</h2>
-    <p>See the fastest typists.</p>
 
-    <button onclick="location.href='leaderboard.html'">
-        View
-    </button>
-</div>
+        <!-- EVENT -->
         <div class="mode-card">
-            <h2>⚡ Burst Mode</h2>
-            <p>Type random words as fast as possible.</p>
-
-            <button onclick="location.href='burst.html'">
-                Play
-            </button>
+            <div class="icon">🎭</div>
+            <div class="mode-left">
+                <div class="text">
+                    <h2>Event Mode</h2>
+                    <p>Enjoy various fun modes.</p>
+                </div>
+            </div>
+            <button onclick="location.href='event.html'">Open</button>
         </div>
-        <div class="mode-card">
-    <h2>🏆 Burst Leaderboard</h2>
-    <p>See the top burst mode players.</p>
 
-    <button onclick="location.href='burstLeaderboard.html'">
-        View
-    </button>
-</div>
+        <!-- TYPING -->
+        <div class="mode-card">
+            <div class="icon">⌨️</div>
+            <div class="mode-left">
+                <div class="text">
+                    <h2>Typing Mode</h2>
+                    <p>Practice passages and improve WPM.</p>
+                </div>
+            </div>
+            <button onclick="location.href='typing.html'">Play</button>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div class="mode-card">
+            <div class="icon">🏆</div>
+            <div class="mode-left">
+                <div class="text">
+                    <h2>Typing Leaderboard</h2>
+                    <p>See the fastest typists.</p>
+                </div>
+            </div>
+            <button onclick="location.href='leaderboard.html'">View</button>
+        </div>
+
+        <!-- BURST -->
+        <div class="mode-card">
+            <div class="icon">⚡</div>
+            <div class="mode-left">
+                <div class="text">
+                    <h2>Burst Mode</h2>
+                    <p>Type random words as fast as possible.</p>
+                </div>
+            </div>
+            <button onclick="location.href='burst.html'">Play</button>
+        </div>
+
+        <!-- BURST LEADERBOARD -->
+        <div class="mode-card">
+            <div class="icon">📊</div>
+            <div class="mode-left">
+                <div class="text">
+                    <h2>Burst Leaderboard</h2>
+                    <p>Top burst mode players.</p>
+                </div>
+            </div>
+            <button onclick="location.href='burstLeaderboard.html'">View</button>
+        </div>
 
     </div>
 

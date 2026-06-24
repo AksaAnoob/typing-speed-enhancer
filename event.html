@@ -4,29 +4,100 @@
     <title>Event Mode - Type Mastery</title>
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            margin: 0;
+        }
+
+        h1 { margin-top: 20px; }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.06);
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        /* SINGLE TYPING BOX */
+        .typing-box {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.06);
+            font-size: 20px;
+            min-height: 120px;
+            line-height: 1.8;
+            cursor: text;
+            user-select: none;
+        }
+
+        .correct { color: #22c55e; }
+        .wrong { color: #ef4444; }
+
+        #hiddenInput {
+            opacity: 0;
+            position: absolute;
+        }
+
+        button {
+            padding: 10px 14px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
 
 <h1>⚡ Event Mode</h1>
 
-<h2 id="eventTitle">Choose a Mode</h2>
+<h2 id="eventTitle">Choose Mode</h2>
 
-<div id="eventBox">Press a mode to start</div>
-
-<input id="eventInput" type="text" placeholder="Type here..." autocomplete="off" disabled>
-
-<div class="mode-container">
-    <button onclick="startEventMode('rain')">🌧 Rain Mode</button>
-    <button onclick="startEventMode('fire')">🔥 Fire Mode</button>
-    <button onclick="startEventMode('chaos')">⚡ Chaos Mode</button>
+<!-- TIMER + SCORE -->
+<div class="stats">
+    <div class="card">⏱ <span id="eventTimer">60</span></div>
+    <div class="card">⭐ <span id="eventScore">0</span></div>
 </div>
 
-<div id="eventScore">Score: 0</div>
+<!-- SINGLE TYPING BOX -->
+<div class="typing-box" onclick="focusInput()">
+    <div id="textDisplay">Press a mode to start</div>
+</div>
+
+<input id="hiddenInput" oninput="handleTyping()" />
+
+<!-- BUTTONS -->
+<div>
+    <button onclick="startEventMode('rain')">🌧 Rain</button>
+    <button onclick="startEventMode('fire')">🔥 Fire</button>
+    <button onclick="stopEventMode()">🛑 Stop</button>
+</div>
 
 <script src="word.js"></script>
 <script src="sentence.js"></script>
 <script src="eventModes.js"></script>
+
+<script>
+function focusInput() {
+    document.getElementById("hiddenInput").focus();
+}
+</script>
 
 </body>
 </html>

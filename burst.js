@@ -1,19 +1,14 @@
 let score = 0;
 let combo = 0;
-
 let time = 60;
 let interval = null;
 let currentWord = "";
-
+let level = "easy";
 let feverMode = false;
 
-/* ---------- DIFFICULTY LEVEL ---------- */
-let level = "easy";
-
-/* ---------- GET RANDOM WORD ---------- */
+/* ---------- RANDOM WORD ---------- */
 function getRandomWord() {
-    const list = WORD_BANK[level];
-    return list[Math.floor(Math.random() * list.length)];
+    return WORD_BANK[level][Math.floor(Math.random() * WORD_BANK[level].length)];
 }
 
 /* ---------- LOAD WORD ---------- */
@@ -28,20 +23,17 @@ function startBurst() {
     score = 0;
     combo = 0;
     time = 60;
-    feverMode = false;
     level = "easy";
+    feverMode = false;
+
+    document.getElementById("score").innerText = 0;
+    document.getElementById("combo").innerText = 0;
+    document.getElementById("timer").innerText = 60;
+    document.getElementById("comboStatus").innerText = "Start Typing...";
 
     document.body.style.boxShadow = "none";
 
-    document.getElementById("score").innerText = score;
-    document.getElementById("combo").innerText = combo;
-    document.getElementById("timer").innerText = time;
-
-    document.getElementById("comboStatus").innerText =
-        "Start Typing...";
-
     const input = document.getElementById("wordInput");
-
     input.value = "";
     input.disabled = false;
     input.focus();
@@ -68,82 +60,62 @@ function finishBurst() {
     clearInterval(interval);
 
     document.getElementById("wordInput").disabled = true;
-
-    document.getElementById("comboStatus").innerText =
-        "Game Over";
+    document.getElementById("comboStatus").innerText = "Game Over";
 
     const username = localStorage.getItem("username");
 
     if (username) {
         fetch("https://typing-speed-enhancer-1.onrender.com/save-burst-score", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username,
-                score
-            })
-        })
-        .then(res => res.json())
-        .then(data => console.log(data.message))
-        .catch(err => console.error(err));
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, score })
+        });
     }
 
-    alert("Time Up! Score: " + score);
+    /* ❌ removed alert (your suggestion) */
+    document.getElementById("comboStatus").innerText =
+        `Game Over! Final Score: ${score}`;
 }
 
 /* ---------- INPUT HANDLER ---------- */
-document.getElementById("wordInput")
-.addEventListener("input", function () {
+document.getElementById("wordInput").addEventListener("input", function () {
 
     let typed = this.value.trim();
 
-    /* ---------- CORRECT WORD ---------- */
     if (typed === currentWord) {
 
         combo++;
 
         if (combo > 10) combo = 10;
 
-        /* ---------- SCORE SYSTEM ---------- */
-        if (combo >= 7) {
-            score += 3;
-        } else if (combo >= 4) {
-            score += 2;
-        } else {
-            score += 1;
-        }
+        /* SCORE SYSTEM */
+        if (combo >= 7) score += 3;
+        else if (combo >= 4) score += 2;
+        else score += 1;
 
-        /* ---------- TIME BONUS ---------- */
-        if (combo % 3 === 0) {
-            time += 1;
-        }
+        /* TIME BONUS */
+        if (combo % 3 === 0) time++;
 
-        /* ---------- FEVER MODE ---------- */
+        /* FEVER MODE */
         if (combo === 10) {
             feverMode = true;
             document.body.style.boxShadow = "0 0 50px gold";
         }
 
-        /* ---------- LEVEL SYSTEM ---------- */
-        if (score >= 20) {
-            level = "hard";
-        } else if (score >= 10) {
-            level = "medium";
-        } else {
-            level = "easy";
-        }
+        /* LEVEL SYSTEM */
+        if (score >= 20) level = "hard";
+        else if (score >= 10) level = "medium";
+        else level = "easy";
 
-        /* ---------- UI UPDATE ---------- */
-        document.getElementById("score").innerText = Math.floor(score);
+        /* UI */
+        document.getElementById("score").innerText = score;
         document.getElementById("combo").innerText = combo;
 
-        /* ---------- COMBO STATUS ---------- */
+        /* STATUS */
         if (combo === 10) {
             document.getElementById("comboStatus").innerText = "⚡ FEVER MODE!";
         } else if (combo >= 7) {
-            document.getElementById("comboStatus").innerText = "🔥 God Streak!";
+            document.getElementById("comboStatus").innerText = "🔥 GOD STREAK!";
         } else if (combo >= 4) {
             document.getElementById("comboStatus").innerText = "🔥 Streak Active";
         } else {
@@ -154,22 +126,17 @@ document.getElementById("wordInput")
         loadWord();
     }
 
-    /* ---------- WRONG WORD ---------- */
     else if (
         typed.length >= currentWord.length &&
         typed !== currentWord
     ) {
-
         combo = 0;
         feverMode = false;
 
         document.body.style.boxShadow = "none";
 
-        document.getElementById("combo").innerText = combo;
-
-        document.getElementById("comboStatus").innerText =
-            "💔 Reset! Focus again";
-
+        document.getElementById("combo").innerText = 0;
+        document.getElementById("comboStatus").innerText = "💔 Reset!";
         this.value = "";
     }
 });

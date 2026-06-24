@@ -3,6 +3,7 @@ let interval = null;
 let isRunning = false;
 let currentText = "";
 let resultCalculated = false;
+let startTime = null;
 
 const username = localStorage.getItem("username");
 
@@ -11,154 +12,50 @@ if (username) {
         `Welcome, ${username}!`;
 }
 
-/* ---------- LOAD RANDOM TEXT (UPDATED) ---------- */
+/* ---------- LOAD TEXT ---------- */
 function loadRandomText() {
 
-    const difficulty =
-        document.getElementById("difficulty").value;
+    const difficulty = document.getElementById("difficulty").value;
+    const selected = SENTENCE_BANK[difficulty];
 
-    let selectedPassages = SENTENCE_BANK[difficulty];
+    currentText = selected[Math.floor(Math.random() * selected.length)];
 
-    let index =
-        Math.floor(Math.random() * selectedPassages.length);
-
-    currentText = selectedPassages[index];
-
-    let container =
-        document.getElementById("textToType");
-
+    const container = document.getElementById("textDisplay");
     container.innerHTML = "";
 
-    for (let i = 0; i < currentText.length; i++) {
-
-        let span = document.createElement("span");
-
-        span.textContent = currentText[i];
-        span.dataset.char = currentText[i];
-
+    currentText.split("").forEach(char => {
+        const span = document.createElement("span");
+        span.textContent = char;
         container.appendChild(span);
-    }
-}
-
-/* ---------- AUTO SCROLL ---------- */
-function autoScrollText() {
-
-    let container = document.getElementById("textToType");
-    let inputLength = document.getElementById("inputBox").value.length;
-
-    let spans = container.querySelectorAll("span");
-
-    if (!spans[inputLength]) return;
-
-    let target = spans[inputLength];
-
-    container.scrollTo({
-        top: target.offsetTop - container.clientHeight / 2,
-        behavior: "smooth"
     });
 }
 
-/* ---------- HIGHLIGHT ---------- */
-function updateHighlight() {
-
-    let input = document.getElementById("inputBox").value;
-    let spans = document.getElementById("textToType").querySelectorAll("span");
-
-    spans.forEach((span, idx) => {
-
-        span.classList.remove("correct", "wrong", "typed");
-
-        if (idx < input.length) {
-
-            let typedChar = input[idx];
-            let originalChar = span.dataset.char;
-
-            span.classList.add("typed");
-
-            if (typedChar === originalChar) {
-                span.classList.add("correct");
-            } else {
-                span.classList.add("wrong");
-            }
-        }
-    });
-
-    if (input === currentText) {
-        finishTest();
-        return;
-    }
-
-    updateLiveStats();
+/* ---------- FOCUS ---------- */
+function focusInput() {
+    document.getElementById("hiddenInput").focus();
 }
 
-/* ---------- LIVE STATS ---------- */
-function calculateMonkeyWPM(input) {
-
-    let correctChars = 0;
-
-    for (let i = 0; i < input.length; i++) {
-        if (input[i] === currentText[i]) {
-            correctChars++;
-        }
-    }
-
-    let timeTaken = (60 - time) / 60;
-    if (timeTaken <= 0) timeTaken = 1 / 60;
-
-    let wpm = Math.round(correctChars / 5 / timeTaken);
-
-    return {
-        wpm,
-        accuracy: input.length > 0
-            ? Math.round((correctChars / input.length) * 100)
-            : 100
-    };
-}
-
-function updateLiveStats() {
-
-    let input = document.getElementById("inputBox").value;
-
-    let result = calculateMonkeyWPM(input);
-
-    document.getElementById("liveWpm").innerText = result.wpm;
-    document.getElementById("liveAccuracy").innerText = result.accuracy + "%";
-}
-
-/* ---------- INPUT EVENT ---------- */
-document.getElementById("inputBox").addEventListener("input", () => {
-    updateHighlight();
-    autoScrollText();
-});
-
-/* ---------- START TEST ---------- */
+/* ---------- START ---------- */
 function startTest() {
 
-    resultCalculated = false;
-
-    if (interval !== null) {
-        clearInterval(interval);
-    }
+    clearInterval(interval);
 
     isRunning = true;
+    resultCalculated = false;
     time = 60;
+    startTime = Date.now();
 
-    document.getElementById("liveWpm").innerText = "0";
-    document.getElementById("liveAccuracy").innerText = "100%";
-
-    const inputBox = document.getElementById("inputBox");
+    document.getElementById("hiddenInput").value = "";
+    document.getElementById("hiddenInput").disabled = false;
 
     document.getElementById("result").style.display = "none";
 
     loadRandomText();
-
-    inputBox.value = "";
-    inputBox.disabled = false;
-    inputBox.focus();
-
-    updateHighlight();
+    focusInput();
 
     document.getElementById("timer").innerText = time;
+    document.getElementById("liveWpm").innerText = 0;
+    document.getElementById("liveAccuracy").innerText = "100%";
 
     interval = setInterval(() => {
 
@@ -168,28 +65,63 @@ function startTest() {
         document.getElementById("timer").innerText = time;
 
         if (time <= 0) {
-
-            isRunning = false;
-            clearInterval(interval);
-
-            inputBox.disabled = true;
-
-            calculateResult();
+            finishTest();
         }
 
     }, 1000);
 }
 
-/* ---------- FINISH TEST ---------- */
+/* ---------- HANDLE TYPING ---------- */
+function handleTyping() {
+
+    if (!isRunning) return;
+
+    const input = document.getElementById("hiddenInput").value;
+    const spans = document.querySelectorAll("#textDisplay span");
+
+    let correctChars = 0;
+
+    spans.forEach((span, i) => {
+
+        span.classList.remove("correct", "incorrect");
+
+        if (!input[i]) return;
+
+        if (input[i] === span.innerText) {
+            span.classList.add("correct");
+            correctChars++;
+        } else {
+            span.classList.add("incorrect");
+        }
+    });
+
+    /* LIVE STATS */
+    const timeTaken = (Date.now() - startTime) / 60000 || 1 / 60;
+
+    const wpm = Math.round(correctChars / 5 / timeTaken);
+    const accuracy = input.length
+        ? Math.round((correctChars / input.length) * 100)
+        : 100;
+
+    document.getElementById("liveWpm").innerText = wpm;
+    document.getElementById("liveAccuracy").innerText = accuracy + "%";
+
+    /* AUTO FINISH */
+    if (input.length >= currentText.length) {
+        finishTest();
+    }
+}
+
+/* ---------- FINISH ---------- */
 function finishTest() {
 
-    if (resultCalculated) return;
+    if (!isRunning || resultCalculated) return;
 
     isRunning = false;
-    clearInterval(interval);
-    interval = null;
+    resultCalculated = true;
 
-    document.getElementById("inputBox").disabled = true;
+    clearInterval(interval);
+    document.getElementById("hiddenInput").disabled = true;
 
     calculateResult();
 }
@@ -197,81 +129,48 @@ function finishTest() {
 /* ---------- RESULT ---------- */
 function calculateResult() {
 
-    if (resultCalculated) return;
+    const input = document.getElementById("hiddenInput").value;
 
-    resultCalculated = true;
-
-    isRunning = false;
-    clearInterval(interval);
-    interval = null;
-
-    let input = document.getElementById("inputBox").value.trim();
-
-    let timeTaken = (60 - time) / 60;
-    if (timeTaken <= 0) timeTaken = 1 / 60;
-
-    let wpm = Math.round((input.length / 5) / timeTaken);
-
-    if (input.length < 5) wpm = 0;
-
-    let correctChars = 0;
+    let correct = 0;
     let mistakes = {};
 
     for (let i = 0; i < currentText.length; i++) {
 
-        let originalChar = currentText[i];
-        let typedChar = input[i];
-
-        if (typedChar === originalChar) {
-            correctChars++;
+        if (input[i] === currentText[i]) {
+            correct++;
         } else {
-
-            let wrongChar = originalChar;
-            if (wrongChar === " ") wrongChar = "[space]";
-
-            mistakes[wrongChar] = (mistakes[wrongChar] || 0) + 1;
+            let key = currentText[i] === " " ? "[space]" : currentText[i];
+            mistakes[key] = (mistakes[key] || 0) + 1;
         }
     }
 
-    let accuracy = Math.round((correctChars / currentText.length) * 100);
+    const timeTaken = (Date.now() - startTime) / 60000 || 1 / 60;
 
-    const username = localStorage.getItem("username");
+    let wpm = Math.round(correct / 5 / timeTaken);
+    if (input.length < 5) wpm = 0;
 
+    let accuracy = Math.round((correct / currentText.length) * 100);
+
+    /* SAVE */
     if (username) {
-
         fetch("https://typing-speed-enhancer-1.onrender.com/save-score", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username,
-                wpm,
-                accuracy
-            })
-        })
-        .then(res => res.json())
-        .then(data => console.log(data.message))
-        .catch(err => console.error(err));
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, wpm, accuracy })
+        });
     }
 
-    let mistakeText = "Mistaken Letters:\n";
-
-    for (let char in mistakes) {
-        mistakeText += `${char} → ${mistakes[char]} times\n`;
+    let mistakeText = "Mistakes:\n";
+    for (let k in mistakes) {
+        mistakeText += `${k} → ${mistakes[k]} times\n`;
     }
 
     document.getElementById("liveWpm").innerText = wpm;
     document.getElementById("liveAccuracy").innerText = accuracy + "%";
 
-    document.getElementById("wpmResult").innerText =
-        "WPM: " + wpm;
-
-    document.getElementById("accuracyResult").innerText =
-        "Accuracy: " + accuracy + "%";
-
-    document.getElementById("mistakeResult").innerText =
-        mistakeText;
+    document.getElementById("wpmResult").innerText = "WPM: " + wpm;
+    document.getElementById("accuracyResult").innerText = "Accuracy: " + accuracy + "%";
+    document.getElementById("mistakeResult").innerText = mistakeText;
 
     document.getElementById("result").style.display = "block";
 }
@@ -280,6 +179,3 @@ function calculateResult() {
 function restartTest() {
     startTest();
 }
-
-/* ---------- EXTRA SAFETY ---------- */
-document.getElementById("inputBox").addEventListener("input", updateHighlight);

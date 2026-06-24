@@ -1,49 +1,35 @@
 const EVENT_MODES = {
     rain: {
         name: "Rain Mode",
-        speed: 3000,
-        mix: "words"
+        speed: 5000
     },
-
     fire: {
         name: "Fire Mode",
-        speed: 2000,
-        mix: "words"
-    },
-
-    chaos: {
-        name: "Chaos Mode",
-        speed: 2500,
-        mix: "mixed"
+        speed: 3000
     }
 };
 
 let currentMode = null;
 let currentWord = "";
 let eventScore = 0;
+
 let eventInterval = null;
+let eventTimer = null;
+let timeLeft = 60;
 
-/* ---------------- GET WORD ---------------- */
-function getEventWord(mode) {
+/* ---------------- TIMER ---------------- */
+function startTimer() {
+    timeLeft = 60;
+    document.getElementById("eventTimer").innerText = timeLeft;
 
-    let pool;
+    eventTimer = setInterval(() => {
+        timeLeft--;
+        document.getElementById("eventTimer").innerText = timeLeft;
 
-    if (mode.mix === "words") {
-        pool = WORD_BANK.easy;
-    }
-
-    else if (mode.mix === "sentences") {
-        pool = SENTENCE_BANK.easy;
-    }
-
-    else {
-        pool = [
-            ...WORD_BANK.easy,
-            ...SENTENCE_BANK.easy
-        ];
-    }
-
-    return pool[Math.floor(Math.random() * pool.length)];
+        if (timeLeft <= 0) {
+            stopEventMode(true);
+        }
+    }, 1000);
 }
 
 /* ---------------- START MODE ---------------- */
@@ -53,53 +39,116 @@ function startEventMode(modeKey) {
     eventScore = 0;
 
     clearInterval(eventInterval);
+    clearInterval(eventTimer);
 
-    document.getElementById("eventTitle").innerText =
-        currentMode.name;
+    document.getElementById("eventScore").innerText = 0;
+    document.getElementById("eventTitle").innerText = currentMode.name;
 
-    document.getElementById("eventInput").disabled = false;
-    document.getElementById("eventInput").value = "";
-    document.getElementById("eventInput").focus();
+    const input = document.getElementById("hiddenInput");
+    input.disabled = false;
+    input.value = "";
+    input.focus();
 
-    loadNewWord();
+    loadText();
+    startTimer();
 
-    document.getElementById("eventScore").innerText =
-        "Score: 0";
-
-    // ONLY refresh word slowly (NOT fast chaos)
     eventInterval = setInterval(() => {
-        loadNewWord();
+
+        loadText();
+
+        // ❗ IMPORTANT FIX:
+        // If user is typing and word changes → clear input
+        input.value = "";
+
     }, currentMode.speed);
 }
 
 /* ---------------- LOAD WORD ---------------- */
-function loadNewWord() {
+function loadText() {
 
-    currentWord = getEventWord(currentMode);
+    const pool = WORD_BANK.easy;
+    currentWord = pool[Math.floor(Math.random() * pool.length)];
 
-    document.getElementById("eventBox").innerText =
-        currentWord;
-
-    document.getElementById("eventInput").value = "";
+    document.getElementById("textDisplay").innerHTML =
+        currentWord
+            .split("")
+            .map(c => `<span>${c}</span>`)
+            .join("");
 }
 
-/* ---------------- INPUT CHECK ---------------- */
-document.getElementById("eventInput")
-.addEventListener("input", function () {
+/* ---------------- INPUT HANDLER ---------------- */
+function handleTyping() {
 
-    let typed = this.value.trim();
+    const input = document.getElementById("hiddenInput").value;
+    const spans = document.querySelectorAll("#textDisplay span");
 
-    if (typed === currentWord) {
+    let correct = true;
+
+    spans.forEach((span, i) => {
+
+        const typed = input[i];
+
+        span.classList.remove("correct", "wrong");
+
+        if (!typed) return;
+
+        if (typed === span.innerText) {
+            span.classList.add("correct");
+        } else {
+            span.classList.add("wrong");
+            correct = false;
+        }
+    });
+
+    // ✅ WORD COMPLETED
+    if (input === currentWord && currentWord.length > 0) {
 
         eventScore++;
-        document.getElementById("eventScore").innerText =
-            "Score: " + eventScore;
+        document.getElementById("eventScore").innerText = eventScore;
 
-        loadNewWord();
+        document.getElementById("hiddenInput").value = "";
+        loadText();
     }
+}
 
-    // wrong handling (optional feedback)
-    else if (typed.length >= currentWord.length) {
-        this.value = "";
-    }
-});
+/* ---------------- STOP MODE ---------------- */
+function stopEventMode(auto = false) {
+
+    clearInterval(eventInterval);
+    clearInterval(eventTimer);
+
+    document.getElementById("hiddenInput").disabled = true;
+
+    document.getElementById("eventTitle").innerText =
+        auto ? "Time Up!" : "Stopped";
+
+    saveEventScore();
+}
+
+/* ---------------- SAVE TO DB ---------------- */
+function saveEventScore() {
+
+    const username = localStorage.getItem("username");
+
+    if (!username) return;
+
+    fetch("https://typing-speed-enhancer-1.onrender.com/save-event-score", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            username,
+            score: eventScore,
+            mode: currentMode?.name || "event"
+        })
+    })
+    .then(res => res.json())
+    .then(data => console.log("Saved:", data.message))
+    .catch(err => console.error(err));
+}
+
+/* ---------------- FOCUS ---------------- */
+function focusInput() {
+    document.getElementById("hiddenInput").focus();
+}

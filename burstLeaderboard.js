@@ -1,14 +1,22 @@
 const currentUser = localStorage.getItem("username");
 
 /* ---------- LOAD LEADERBOARD ---------- */
-
 fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
 .then(res => res.json())
 .then(data => {
 
     const container = document.getElementById("leaderboard");
 
-    /* ---------- FIX: TIE SAFE RANKING ---------- */
+    /* ---------- EMPTY STATE ---------- */
+    if (!data || data.length === 0) {
+        container.innerHTML = `<p class="empty">No scores yet. Be the first 🔥</p>`;
+        return;
+    }
+
+    /* ---------- SORT SAFETY (IMPORTANT FIX) ---------- */
+    data.sort((a, b) => b.score - a.score);
+
+    /* ---------- RANKING ---------- */
     let rank = 1;
 
     for (let i = 0; i < data.length; i++) {
@@ -21,7 +29,6 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
     }
 
     /* ---------- BUILD TABLE ---------- */
-
     let html = `
         <table>
             <tr>
@@ -33,11 +40,10 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
 
     data.forEach(player => {
 
-        let rowClass = "";
+        const isCurrentUser =
+            currentUser && player.username === currentUser;
 
-        if (player.username === currentUser) {
-            rowClass = "current-user";
-        }
+        let rowClass = isCurrentUser ? "current-user" : "";
 
         let displayRank =
             player.rank === 1 ? "🥇" :
@@ -49,14 +55,14 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
             <tr class="${rowClass}">
                 <td>${displayRank}</td>
 
-                <td style="display:flex;align-items:center;gap:10px;">
+                <td style="display:flex;align-items:center;gap:10px;justify-content:center;">
                     <img
                         src="${player.avatar || 'https://api.dicebear.com/7.x/adventurer/svg?seed=guest'}"
                         width="40"
                         height="40"
                         style="border-radius:50%"
                     >
-                    ${player.username}
+                    ${player.username || "Unknown"}
                 </td>
 
                 <td>${player.score}</td>
@@ -68,4 +74,8 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
 
     container.innerHTML = html;
 })
-.catch(err => console.error(err));
+.catch(err => {
+    console.error(err);
+    document.getElementById("leaderboard").innerHTML =
+        `<p class="empty">Failed to load leaderboard ❌</p>`;
+});
