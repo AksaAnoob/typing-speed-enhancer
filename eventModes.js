@@ -172,6 +172,21 @@ function saveEventScore() {
 }
 
 /* ================= FOCUS ================= */
+/* ================= FOCUS ================= */
+/* ================= FOCUS ================= */
 function focusInput() {
     document.getElementById("hiddenInput").focus();
+}
+
+/* ================= INSTRUCTIONS ================= */
+function openInstructions() {
+    document
+        .getElementById("instructionModal")
+        .classList.remove("hidden");
+}
+
+function closeInstructions() {
+    document
+        .getElementById("instructionModal")
+        .classList.add("hidden");
 }

@@ -179,3 +179,19 @@ function calculateResult() {
 function restartTest() {
     startTest();
 }
+function openInstructions() {
+    console.log("Button Clicked");
+
+    const modal = document.getElementById("instructionModal");
+
+    modal.classList.remove("hidden");
+    modal.style.display = "flex";
+}
+
+function closeInstructions() {
+
+    const modal = document.getElementById("instructionModal");
+
+    modal.classList.add("hidden");
+    modal.style.display = "none";
+}

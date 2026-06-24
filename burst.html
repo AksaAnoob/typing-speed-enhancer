@@ -1,8 +1,7 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
     <title>Burst Mode</title>
-    <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -21,9 +20,9 @@
 
         h1 {
             text-align: center;
+            margin-top: 20px;
         }
 
-        /* ---------- STATS GRID (FIXED LAYOUT) ---------- */
         .stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -38,7 +37,6 @@
             text-align: center;
         }
 
-        /* ---------- WORD BOX ---------- */
         #wordBox {
             margin-top: 30px;
             text-align: center;
@@ -47,7 +45,7 @@
             color: #60a5fa;
         }
 
-        input {
+        #wordInput {
             display: block;
             margin: 20px auto;
             padding: 12px;
@@ -60,7 +58,7 @@
 
         button {
             padding: 10px 16px;
-            margin: 10px 5px;
+            margin: 5px;
             border: none;
             border-radius: 8px;
             background: #4f46e5;
@@ -72,16 +70,50 @@
             background: #6366f1;
         }
 
-        /* ---------- COMBO STATUS ---------- */
         #comboStatus {
             color: #38bdf8;
             font-weight: bold;
         }
 
-        /* ---------- RESPONSIVE ---------- */
-        @media (max-width: 700px) {
+        /* Instructions Button */
+        .info-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+
+        .hidden{
+    display:none !important;
+}
+
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    backdrop-filter:blur(8px);
+    z-index:1000;
+}
+
+.modal-content{
+    background:rgba(17,24,39,0.92);
+    color:white;
+    padding:25px;
+    border-radius:16px;
+    width:400px;
+    max-width:90%;
+    border:1px solid rgba(255,255,255,0.1);
+    text-align:center;
+}
+        @media (max-width:700px) {
             .stats {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2,1fr);
             }
 
             #wordBox {
@@ -92,6 +124,10 @@
 </head>
 
 <body>
+
+<button class="info-btn" onclick="openInstructions()">
+    📖 Instructions
+</button>
 
 <div class="app-container">
 
@@ -123,11 +159,44 @@
 
     <div id="wordBox">Press Start</div>
 
-    <input type="text" id="wordInput" placeholder="Type here...">
+    <input
+        type="text"
+        id="wordInput"
+        placeholder="Type here..."
+    >
 
     <div style="text-align:center;">
         <button onclick="startBurst()">Start</button>
         <button onclick="finishBurst()">End</button>
+    </div>
+
+</div>
+
+<!-- Instructions Modal -->
+<div id="instructionModal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <h2>📖 Burst Instructions</h2>
+
+        <p>
+            ⚡ <b>Burst Mode</b><br><br>
+
+            • Duration: 60 seconds<br>
+            • Type words continuously<br>
+            • Combo 4+ gives bonus score<br>
+            • Combo 7+ gives higher bonus score<br>
+            • Combo 10 activates Fever Mode<br>
+            • Every 3 combo streak gives +1 second<br>
+            • Wrong word resets combo<br><br>
+
+            🏆 Score as high as possible before time runs out.
+        </p>
+
+        <button onclick="closeInstructions()">
+            Close
+        </button>
+
     </div>
 
 </div>

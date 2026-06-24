@@ -8,7 +8,9 @@ let feverMode = false;
 
 /* ---------- RANDOM WORD ---------- */
 function getRandomWord() {
-    return WORD_BANK[level][Math.floor(Math.random() * WORD_BANK[level].length)];
+    return WORD_BANK[level][
+        Math.floor(Math.random() * WORD_BANK[level].length)
+    ];
 }
 
 /* ---------- LOAD WORD ---------- */
@@ -60,83 +62,108 @@ function finishBurst() {
     clearInterval(interval);
 
     document.getElementById("wordInput").disabled = true;
-    document.getElementById("comboStatus").innerText = "Game Over";
+    document.getElementById("comboStatus").innerText =
+        `Game Over! Final Score: ${score}`;
 
     const username = localStorage.getItem("username");
 
     if (username) {
         fetch("https://typing-speed-enhancer-1.onrender.com/save-burst-score", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, score })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                score
+            })
         });
     }
+}
 
-    /* ❌ removed alert (your suggestion) */
-    document.getElementById("comboStatus").innerText =
-        `Game Over! Final Score: ${score}`;
+/* ---------- INSTRUCTIONS ---------- */
+function openInstructions() {
+    console.log("Button Clicked");
+
+    const modal = document.getElementById("instructionModal");
+
+    modal.classList.remove("hidden");
+    modal.style.display = "flex";
+}
+
+function closeInstructions() {
+
+    const modal = document.getElementById("instructionModal");
+
+    modal.classList.add("hidden");
+    modal.style.display = "none";
 }
 
 /* ---------- INPUT HANDLER ---------- */
-document.getElementById("wordInput").addEventListener("input", function () {
+window.onload = function () {
 
-    let typed = this.value.trim();
+    document.getElementById("wordInput").addEventListener("input", function () {
 
-    if (typed === currentWord) {
+        const typed = this.value.trim();
 
-        combo++;
+        if (typed === currentWord) {
 
-        if (combo > 10) combo = 10;
+            combo++;
 
-        /* SCORE SYSTEM */
-        if (combo >= 7) score += 3;
-        else if (combo >= 4) score += 2;
-        else score += 1;
+            if (combo > 10) combo = 10;
 
-        /* TIME BONUS */
-        if (combo % 3 === 0) time++;
+            if (combo >= 7) score += 3;
+            else if (combo >= 4) score += 2;
+            else score += 1;
 
-        /* FEVER MODE */
-        if (combo === 10) {
-            feverMode = true;
-            document.body.style.boxShadow = "0 0 50px gold";
+            if (combo % 3 === 0) {
+                time++;
+                document.getElementById("timer").innerText = time;
+            }
+
+            if (combo === 10) {
+                feverMode = true;
+                document.body.style.boxShadow = "0 0 50px gold";
+            }
+
+            if (score >= 20) level = "hard";
+            else if (score >= 10) level = "medium";
+            else level = "easy";
+
+            document.getElementById("score").innerText = score;
+            document.getElementById("combo").innerText = combo;
+
+            if (combo === 10) {
+                document.getElementById("comboStatus").innerText = "⚡ FEVER MODE!";
+            }
+            else if (combo >= 7) {
+                document.getElementById("comboStatus").innerText = "🔥 GOD STREAK!";
+            }
+            else if (combo >= 4) {
+                document.getElementById("comboStatus").innerText = "🔥 Streak Active";
+            }
+            else {
+                document.getElementById("comboStatus").innerText = "👍 Keep Going";
+            }
+
+            this.value = "";
+            loadWord();
         }
 
-        /* LEVEL SYSTEM */
-        if (score >= 20) level = "hard";
-        else if (score >= 10) level = "medium";
-        else level = "easy";
+        else if (
+            typed.length >= currentWord.length &&
+            typed !== currentWord
+        ) {
 
-        /* UI */
-        document.getElementById("score").innerText = score;
-        document.getElementById("combo").innerText = combo;
+            combo = 0;
+            feverMode = false;
 
-        /* STATUS */
-        if (combo === 10) {
-            document.getElementById("comboStatus").innerText = "⚡ FEVER MODE!";
-        } else if (combo >= 7) {
-            document.getElementById("comboStatus").innerText = "🔥 GOD STREAK!";
-        } else if (combo >= 4) {
-            document.getElementById("comboStatus").innerText = "🔥 Streak Active";
-        } else {
-            document.getElementById("comboStatus").innerText = "👍 Keep Going";
+            document.body.style.boxShadow = "none";
+
+            document.getElementById("combo").innerText = 0;
+            document.getElementById("comboStatus").innerText = "💔 Combo Reset!";
+
+            this.value = "";
         }
-
-        this.value = "";
-        loadWord();
-    }
-
-    else if (
-        typed.length >= currentWord.length &&
-        typed !== currentWord
-    ) {
-        combo = 0;
-        feverMode = false;
-
-        document.body.style.boxShadow = "none";
-
-        document.getElementById("combo").innerText = 0;
-        document.getElementById("comboStatus").innerText = "💔 Reset!";
-        this.value = "";
-    }
-});
+    });
+};
