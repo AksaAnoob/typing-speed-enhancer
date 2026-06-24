@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const eventScoreSchema = new mongoose.Schema({
-
     username: {
         type: String,
         required: true
@@ -12,9 +11,10 @@ const eventScoreSchema = new mongoose.Schema({
         required: true
     },
 
+    // FIX: must match frontend keys exactly
     mode: {
         type: String,
-        enum: ["rain", "fire"], // ensures only valid modes
+        enum: ["rain", "fire"],
         required: true
     },
 

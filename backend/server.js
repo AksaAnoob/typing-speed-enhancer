@@ -176,12 +176,39 @@ app.post("/save-burst-score", async (req, res) => {
     }
 });
 app.post("/save-event-score", async (req, res) => {
+    try {
+        const { username, score, mode } = req.body;
 
-    console.log("🔥 ROUTE HIT");
+        console.log("EVENT RECEIVED:", username, score, mode);
 
-    console.log("BODY:", req.body);
+        if (!username || !mode) {
+            return res.status(400).json({ message: "Missing data" });
+        }
 
-    return res.json({ ok: true });
+        const existing = await EventScore.findOne({ username, mode });
+
+        if (!existing) {
+            const newScore = await EventScore.create({
+                username,
+                score,
+                mode
+            });
+
+            console.log("CREATED:", newScore);
+
+        } else if (score > existing.score) {
+            existing.score = score;
+            await existing.save();
+
+            console.log("UPDATED SCORE");
+        }
+
+        res.json({ message: "Saved successfully" });
+
+    } catch (err) {
+        console.log("EVENT SAVE ERROR:", err);
+        res.status(500).json({ message: "Server error" });
+    }
 });
 app.get("/leaderboard", async (req, res) => {
     try {
