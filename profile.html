@@ -182,6 +182,10 @@
             <h3>Burst Score</h3>
             <p id="bestBurst">0</p>
         </div>
+        <div class="glass-card stat">
+    <h3>Best Event Score</h3>
+    <p id="eventBestDisplay">0</p>
+</div>
 
     </div>
     <div style="text-align:center; margin-top: 30px;">
@@ -265,9 +269,41 @@ if (username) {
 
         document.getElementById("avatar").src =
     data.avatar || getAvatarUrl(username);
+    
 
     })
     .catch(err => console.log(err));
+    fetch(`${backendURL}/event-leaderboard`)
+    .then(res => res.json())
+    .then(data => {
+
+        const username = localStorage.getItem("username");
+
+        // 1. keep best score per user (SAME as leaderboard)
+        const bestMap = {};
+
+        data.forEach(player => {
+            const existing = bestMap[player.username];
+
+            if (!existing || player.score > existing.score) {
+                bestMap[player.username] = player;
+            }
+        });
+
+        const cleaned = Object.values(bestMap);
+
+        // 2. find current user
+        const me = cleaned.find(p => p.username === username);
+        const modeLabel =
+    me?.mode === "fire" ? "🔥 Fire Mode" :
+    me?.mode === "ice" ? "❄️ Ice Mode" :
+    me?.mode || "-";
+
+document.getElementById("eventBestDisplay").innerText =
+    me ? `${me.score} (${modeLabel})` : "0";
+        // 3. update UI
+        
+    });
 }
 
 /* ---------------- MODAL ---------------- */
