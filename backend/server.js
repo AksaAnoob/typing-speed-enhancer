@@ -343,15 +343,20 @@ app.get("/profile/:username", async (req, res) => {
     }
 });
 app.post("/updateAvatar", async (req, res) => {
-
     const { username, avatar } = req.body;
 
-    await User.findOneAndUpdate(
-        { username },
-        { avatar }
-    );
+    try {
+        const user = await User.findOneAndUpdate(
+            { username },
+            { $set: { avatar } },
+            { new: true, upsert: true }   // 🔥 IMPORTANT FIX
+        );
 
-    res.json({ message: "updated" });
+        res.json({ message: "updated", user });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "update failed" });
+    }
 });
 const PORT = process.env.PORT || 5000;
 
