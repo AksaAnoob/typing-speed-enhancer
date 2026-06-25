@@ -264,7 +264,7 @@ if (username) {
         document.getElementById("bestBurst").innerText = data.burstScore ?? 0;
 
         document.getElementById("avatar").src =
-            getAvatarUrl(data.avatar || username);
+    data.avatar || getAvatarUrl(username);
 
     })
     .catch(err => console.log(err));

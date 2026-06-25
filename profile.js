@@ -1,47 +1,49 @@
+
 let selectedAvatar = null;
 
 const backendURL = "https://typing-speed-enhancer-1.onrender.com";
 const username = localStorage.getItem("username");
-
+console.log("CURRENT USERNAME:", localStorage.getItem("username"));
+console.log("FETCHING:", `${backendURL}/profile/${username}`);
 /* ---------------- USERNAME ---------------- */
 
 document.getElementById("username").innerText =
     username || "Guest";
 
-/* ---------------- AVATAR MAPPER ---------------- */
-
-function getAvatarUrl(seed) {
-    return `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${seed}`;
-}
-
 /* ---------------- PROFILE LOAD ---------------- */
+
 if (username) {
+
+    // ✅ ADD THIS LINE HERE (before fetch result loads)
+    document.getElementById("avatar").src =
+        "https://api.dicebear.com/7.x/fun-emoji/svg?seed=loading";
+
     fetch(`${backendURL}/profile/${username}`)
         .then(res => res.json())
         .then(data => {
 
-    console.log("PROFILE DATA:", data); // ✅ ADD THIS
+            console.log("PROFILE DATA:", data);
 
-    document.getElementById("bestWpm").innerText = data.wpm ?? 0;
-    document.getElementById("bestAccuracy").innerText = (data.accuracy ?? 0) + "%";
-    document.getElementById("bestBurst").innerText = data.burstScore ?? 0;
+            document.getElementById("bestWpm").innerText = data.wpm ?? 0;
+            document.getElementById("bestAccuracy").innerText = (data.accuracy ?? 0) + "%";
+            document.getElementById("bestBurst").innerText = data.burstScore ?? 0;
 
-    document.getElementById("avatar").src = data.avatar;
-})
-        .catch(err => console.error(err));
+            // FINAL REAL AVATAR
+            document.getElementById("avatar").src =
+    data.avatar || getAvatarUrl(username);
+
+        })
+        .catch(err => console.error("Profile load error:", err));
 }
 /* ---------------- MODAL CONTROL ---------------- */
 
 function openAvatarPicker() {
     selectedAvatar = null;
-
-    document.getElementById("avatarModal")
-        .classList.remove("hidden");
+    document.getElementById("avatarModal").classList.remove("hidden");
 }
 
 function closeAvatarPicker() {
-    document.getElementById("avatarModal")
-        .classList.add("hidden");
+    document.getElementById("avatarModal").classList.add("hidden");
 }
 
 /* ---------------- AVATAR SELECT ---------------- */
@@ -49,22 +51,9 @@ function closeAvatarPicker() {
 function selectAvatar(id) {
     selectedAvatar = id;
 
-    const avatarUrl =
-        getAvatarUrl(id);
-
-    document.getElementById("avatar").src = avatarUrl;
-}
-
-/* ---------------- CUSTOM MODAL (REPLACES ALERT) ---------------- */
-
-function showModal(title, message) {
-    document.getElementById("modalTitle").innerText = title;
-    document.getElementById("modalMessage").innerText = message;
-    document.getElementById("customModal").classList.remove("hidden");
-}
-
-function closeModal() {
-    document.getElementById("customModal").classList.add("hidden");
+    /* preview only */
+    document.getElementById("avatar").src =
+        `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${id}`;
 }
 
 /* ---------------- SAVE AVATAR ---------------- */
@@ -76,7 +65,8 @@ function saveAvatar() {
         return;
     }
 
-    const avatarUrl = getAvatarUrl(selectedAvatar);
+    const avatarUrl =
+        `https://api.dicebear.com/7.x/fun-emoji/svg?seed=${selectedAvatar}`;
 
     fetch(`${backendURL}/updateAvatar`, {
         method: "POST",
@@ -92,8 +82,23 @@ function saveAvatar() {
     .then(() => {
         showModal("Success", "Avatar updated!");
         closeAvatarPicker();
+
+        /* ✅ instantly reflect saved avatar */
+        document.getElementById("avatar").src = avatarUrl;
     })
     .catch(() => {
         showModal("Error", "Failed to update avatar. Try again.");
     });
+}
+
+/* ---------------- CUSTOM MODAL ---------------- */
+
+function showModal(title, message) {
+    document.getElementById("modalTitle").innerText = title;
+    document.getElementById("modalMessage").innerText = message;
+    document.getElementById("customModal").classList.remove("hidden");
+}
+
+function closeModal() {
+    document.getElementById("customModal").classList.add("hidden");
 }
