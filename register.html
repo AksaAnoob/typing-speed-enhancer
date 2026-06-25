@@ -186,7 +186,13 @@ button:hover{
     transform: translateY(-2px);
     box-shadow:0 0 25px rgba(56,189,248,.5);
 }
-
+#passwordRule{
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #cbd5e1;
+    text-align: left;
+}
 /* Link */
 
 a{
@@ -221,6 +227,12 @@ a:hover{
         <input type="text" id="username" placeholder="Username" required>
         <input type="email" id="email" placeholder="Email" required>
         <input type="password" id="password" placeholder="Password" required>
+
+<p id="passwordRule">
+🔒 Password must be at least 6 characters and contain 1 uppercase letter.
+</p>
+
+
 
         <button type="submit">REGISTER</button>
 
