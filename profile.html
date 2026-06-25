@@ -296,7 +296,7 @@ if (username) {
         const me = cleaned.find(p => p.username === username);
         const modeLabel =
     me?.mode === "fire" ? "🔥 Fire Mode" :
-    me?.mode === "ice" ? "❄️ Ice Mode" :
+    me?.mode === "rain" ? "🌧 Rain Mode" :
     me?.mode || "-";
 
 document.getElementById("eventBestDisplay").innerText =
