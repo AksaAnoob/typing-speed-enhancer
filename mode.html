@@ -245,7 +245,53 @@
   background: #dc2626;
 }* RIGHT */
 
+.footer-links {
+  margin-top: 40px;
+  padding: 20px;
+  text-align: center;
+  opacity: 0.8;
+}
 
+.footer-links a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.footer-links a:hover {
+  background: #4f46e5;
+}
+.floating-buttons-left {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+
+  display: flex;
+  gap: 10px;
+  z-index: 999;
+}
+
+.floating-buttons-left button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+
+  background: rgba(255,255,255,0.08);
+  color: white;
+
+  cursor: pointer;
+  font-size: 13px;
+
+  backdrop-filter: blur(10px);
+  transition: 0.2s ease;
+}
+
+.floating-buttons-left button:hover {
+  background: #4f46e5;
+  transform: scale(1.05);
+}
 .profile-btn:hover {
   background: #6366f1;
 } </style>
@@ -357,6 +403,9 @@ function logout() {
     window.location.href = "index.html";
 }
 </script>
-
+<div class="floating-buttons-left">
+  <button onclick="location.href='about.html'">About</button>
+  <button onclick="location.href='contact.html'">Contact</button>
+</div>
 </body>
 </html>

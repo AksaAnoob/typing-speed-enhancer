@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>About</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .card {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    a {
+      color: #60a5fa;
+    }
+    .back-btn {
+    margin-top: 25px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    color: white;
+    font-weight: bold;
+
+    transition: 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+  </style>
+</head>
+
+<body>
+
+<h1>About TypeMastery ⚡</h1>
+
+<div class="card">
+  <p>This is a typing practice platform with multiple modes:</p>
+ 
+
+<p>
+TypeMastery is a modern typing practice platform designed to help users improve their typing speed, accuracy, and consistency through engaging challenges.
+</p>
+
+<p>
+The platform includes multiple game modes such as <b>Typing Mode</b>, <b>Burst Mode</b>, and <b>Event Mode</b>, each designed to test different aspects of typing performance.
+</p>
+
+<p>
+Users can track their progress through real-time statistics like WPM (Words Per Minute), accuracy, and burst score, and compete with others through global leaderboards.
+</p>
+
+<p>
+The goal of TypeMastery is simple — to make typing practice fun, competitive, and addictive while helping users steadily improve their skills.
+</p>
+
+<p style="opacity:0.8;">
+Keep practicing. Speed is built, not given. ⚡
+</p>
+</div>
+
+<br>
+<button onclick="goBack()" class="back-btn">
+    ⬅ Back to Home
+</button>
+<script>
+function goBack() {
+    window.location.href = "mode.html";
+}
+</script>
+</body>
+</html>
