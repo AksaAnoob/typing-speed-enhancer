@@ -9,6 +9,7 @@ const app = express();
 const Score = require("./models/Score");
 const BurstScore = require("./models/BurstScore");
 const EventScore = require("./models/EventScore");
+const Contact = require("./models/Contact");
 app.use(cors());
 app.use(express.json());
 
@@ -356,6 +357,31 @@ app.post("/updateAvatar", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "update failed" });
+    }
+});
+app.post("/contact", async (req, res) => {
+
+    try {
+
+        const { name, email, message } = req.body;
+
+        await Contact.create({
+            name,
+            email,
+            message
+        });
+
+        res.json({
+            success: true
+        });
+
+    } catch (err) {
+
+        console.error(err);
+
+        res.status(500).json({
+            success: false
+        });
     }
 });
 const PORT = process.env.PORT || 5000;
