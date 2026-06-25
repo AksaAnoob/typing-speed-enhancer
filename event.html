@@ -11,6 +11,7 @@
             color: white;
             text-align: center;
             margin: 0;
+            position: relative;
         }
 
         h1 { margin-top: 20px; }
@@ -58,56 +59,85 @@
             color: white;
             cursor: pointer;
         }
-        .hidden{
-    display:none !important;
-}
 
-.modal{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.6);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    backdrop-filter:blur(8px);
-    z-index:1000;
-}
+        .hidden {
+            display: none !important;
+        }
 
-.modal-content{
-    background:rgba(17,24,39,0.92);
-    color:white;
-    padding:25px;
-    border-radius:16px;
-    width:400px;
-    max-width:90%;
-    border:1px solid rgba(255,255,255,0.1);
-    text-align:center;
-}
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+        }
 
-.info-btn{
-    position:absolute;
-    top:20px;
-    right:20px;
-}
+        .modal-content {
+            background: rgba(17,24,39,0.92);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            width: 400px;
+            max-width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        /* ✅ FIXED: ensure button is ABOVE overlay */
+        .info-btn{
+            position:absolute;
+            top:20px;
+            right:20px;
+            z-index: 2000; /* 🔥 IMPORTANT FIX */
+        }
+
+        .back-btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            color: white;
+            font-weight: bold;
+            transition: 0.2s ease;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        /* BACKGROUND BLUR OVERLAY */
+        #blurOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(6px);
+            z-index: 999;
+            display: none;
+        }
+
     </style>
 </head>
 
-<!-- BLUR BACKDROP -->
-<div id="blurOverlay" onclick="closeInstructions()"></div>
-
-<!-- INSTRUCTION MODAL -->
-
 <body>
+
+<!-- BLUR BACKDROP -->
+<div id="blurOverlay"></div>
 
 <h1>⚡ Event Mode</h1>
 
-<button class="info-btn"
-        onclick="openInstructions()">
-    📖 Instructions
-</button>
+<button class="info-btn" onclick="openInstructions()">📖 Instructions</button>
+
 <h2 id="eventTitle">Choose Mode</h2>
 
 <div class="stats">
@@ -126,15 +156,14 @@
     <button onclick="startEventMode('fire')">🔥 Fire</button>
     <button onclick="stopEventMode()">🛑 Stop</button>
 </div>
+
+<!-- INSTRUCTIONS -->
 <div id="instructionModal" class="modal hidden">
-
     <div class="modal-content">
-
         <h2>📖 Event Instructions</h2>
 
         <p>
             🌧 <b>Rain Mode</b><br><br>
-
             • Easy words<br>
             • New word every 5 seconds<br>
             • +1 point per correct word
@@ -142,7 +171,6 @@
             <br><br>
 
             🔥 <b>Fire Mode</b><br><br>
-
             • Medium words<br>
             • New word every 3 seconds<br>
             • +2 points per correct word
@@ -150,22 +178,52 @@
             <br><br>
 
             ⏱ Duration: 60 seconds
-
-            <br><br>
-
-            🎯 Type as many words as possible.
         </p>
 
-        <button onclick="closeInstructions()">
-            Close
-        </button>
-
+        <button onclick="closeInstructions()">Close</button>
     </div>
-
 </div>
+
+<!-- RESULT POPUP -->
+<div id="resultModal" class="modal hidden">
+    <div class="modal-content">
+        <h2>🎯 Event Completed</h2>
+
+        <p>Your Score:</p>
+        <h1 id="finalScore">0</h1>
+
+        <button onclick="closeResult()">OK</button>
+    </div>
+</div>
+
+<div style="text-align:center; margin: 30px 0;">
+    <button onclick="goHome()" class="back-btn">⬅ Back to Home</button>
+</div>
+
 <script src="word.js"></script>
 <script src="sentence.js"></script>
 <script src="eventModes.js"></script>
+
+<script>
+
+function goHome() {
+    window.location.href = "mode.html";
+}
+
+/* SHOW RESULT POPUP */
+function showResult(score) {
+    document.getElementById("finalScore").innerText = score;
+    document.getElementById("resultModal").classList.remove("hidden");
+    document.getElementById("blurOverlay").style.display = "block";
+}
+
+/* CLOSE RESULT */
+function closeResult() {
+    document.getElementById("resultModal").classList.add("hidden");
+    document.getElementById("blurOverlay").style.display = "none";
+}
+
+</script>
 
 </body>
 </html>

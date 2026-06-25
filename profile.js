@@ -15,23 +15,21 @@ function getAvatarUrl(seed) {
 }
 
 /* ---------------- PROFILE LOAD ---------------- */
-
 if (username) {
     fetch(`${backendURL}/profile/${username}`)
         .then(res => res.json())
         .then(data => {
 
-            document.getElementById("bestWpm").innerText = data.wpm ?? 0;
-            document.getElementById("bestAccuracy").innerText = (data.accuracy ?? 0) + "%";
-            document.getElementById("bestBurst").innerText = data.burstScore ?? 0;
+    console.log("PROFILE DATA:", data); // ✅ ADD THIS
 
-            document.getElementById("avatar").src =
-                getAvatarUrl(data.avatar || username);
+    document.getElementById("bestWpm").innerText = data.wpm ?? 0;
+    document.getElementById("bestAccuracy").innerText = (data.accuracy ?? 0) + "%";
+    document.getElementById("bestBurst").innerText = data.burstScore ?? 0;
 
-        })
-        .catch(err => console.error("Profile load error:", err));
+    document.getElementById("avatar").src = data.avatar;
+})
+        .catch(err => console.error(err));
 }
-
 /* ---------------- MODAL CONTROL ---------------- */
 
 function openAvatarPicker() {

@@ -14,7 +14,7 @@ let currentModeKey = null;
 let currentWord = "";
 let eventScore = 0;
 
-let wordTimeout = null;     // FIXED: word timer
+let wordTimeout = null;
 let countdownTimer = null;
 let timeLeft = 60;
 
@@ -38,7 +38,7 @@ function startTimer() {
 /* ================= LOAD WORD ================= */
 function loadText() {
 
-    const pool = WORD_BANK.medium; // your current choice
+    const pool = WORD_BANK.medium;
     currentWord = pool[Math.floor(Math.random() * pool.length)];
 
     document.getElementById("textDisplay").innerHTML =
@@ -92,7 +92,6 @@ function startEventMode(modeKey) {
     input.focus();
 
     startTimer();
-
     startNextWord();
 }
 
@@ -123,12 +122,10 @@ function handleTyping() {
     /* ================= WORD COMPLETE ================= */
     if (input === currentWord && currentWord.length > 0) {
 
-        // score logic
         eventScore += (currentModeKey === "fire") ? 2 : 1;
 
         document.getElementById("eventScore").innerText = eventScore;
 
-        // move to next word immediately but KEEP timing clean
         clearTimeout(wordTimeout);
         startNextWord();
     }
@@ -145,7 +142,13 @@ function stopEventMode(auto = false) {
     document.getElementById("eventTitle").innerText =
         auto ? "Time Up!" : "Stopped";
 
+    // save score first
     saveEventScore();
+
+    // 🔥 SHOW RESULT POPUP (from HTML)
+    if (typeof showResult === "function") {
+        showResult(eventScore);
+    }
 }
 
 /* ================= SAVE SCORE ================= */
@@ -172,21 +175,17 @@ function saveEventScore() {
 }
 
 /* ================= FOCUS ================= */
-/* ================= FOCUS ================= */
-/* ================= FOCUS ================= */
 function focusInput() {
     document.getElementById("hiddenInput").focus();
 }
 
 /* ================= INSTRUCTIONS ================= */
 function openInstructions() {
-    document
-        .getElementById("instructionModal")
+    document.getElementById("instructionModal")
         .classList.remove("hidden");
 }
 
 function closeInstructions() {
-    document
-        .getElementById("instructionModal")
+    document.getElementById("instructionModal")
         .classList.add("hidden");
 }

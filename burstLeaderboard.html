@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial;
-            background: #0f172a;
-            color: white;
-            text-align: center;
-        }
+          body {
+    margin: 0;
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
         h1 {
             margin-top: 25px;
             font-size: 3rem;
@@ -104,6 +107,27 @@
             margin-top: 30px;
             opacity: 0.7;
         }
+        .back-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    color: white;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+#leaderboard {
+    flex: 1;
+}
+.footer {
+    padding: 20px 0;
+}
     </style>
 </head>
 
@@ -118,8 +142,14 @@
         <div class="dot"></div>
     </div>
 </div>
-
+<div class="footer">
+    <button onclick="goHome()" class="back-btn">⬅ Back to Home</button>
+</div>
 <script src="burstLeaderboard.js"></script>
-
+<script>
+function goHome() {
+    window.location.href = "mode.html";
+}
+</script>
 </body>
 </html>

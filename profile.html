@@ -126,6 +126,21 @@
             border-radius: 8px;
             cursor: pointer;
         }
+        .back-btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    color: white;
+    font-weight: bold;
+    transition: 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
 
     </style>
 </head>
@@ -169,7 +184,9 @@
         </div>
 
     </div>
-
+    <div style="text-align:center; margin-top: 30px;">
+    <button onclick="goHome()" class="back-btn">⬅ Back to Home</button>
+</div>
 </div>
 
 <!-- AVATAR MODAL -->
@@ -332,6 +349,9 @@ function showModal(title, message) {
 
 function closeModal() {
     document.getElementById("customModal").classList.add("hidden");
+}
+function goHome() {
+    window.location.href = "mode.html";
 }
 </script>
 

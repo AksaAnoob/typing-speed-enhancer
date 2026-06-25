@@ -98,6 +98,43 @@ function closeInstructions() {
     modal.classList.add("hidden");
     modal.style.display = "none";
 }
+function createParticles() {
+    const colors = ["#00f7ff", "#ff00ff", "#00ff6a", "#ffffff", "#ff3d00"];
+
+    for (let i = 0; i < 40; i++) {
+        const particle = document.createElement("div");
+
+        particle.style.position = "fixed";
+        particle.style.width = "6px";
+        particle.style.height = "6px";
+        particle.style.borderRadius = "50%";
+        particle.style.left = "50%";
+        particle.style.top = "50%";
+        particle.style.pointerEvents = "none";
+        particle.style.zIndex = "9999";
+
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.background = color;
+
+        document.body.appendChild(particle);
+
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 200 + 50;
+
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+
+        particle.animate([
+            { transform: "translate(0,0)", opacity: 1 },
+            { transform: `translate(${x}px, ${y}px)`, opacity: 0 }
+        ], {
+            duration: 800 + Math.random() * 400,
+            easing: "cubic-bezier(.17,.67,.83,.67)"
+        });
+
+        setTimeout(() => particle.remove(), 1000);
+    }
+}
 
 /* ---------- INPUT HANDLER ---------- */
 window.onload = function () {
@@ -122,9 +159,13 @@ window.onload = function () {
             }
 
             if (combo === 10) {
-                feverMode = true;
-                document.body.style.boxShadow = "0 0 50px gold";
-            }
+    feverMode = true;
+
+    //document.body.style.boxShadow = "0 0 30px #00f7ff, 0 0 60px #ff00ff";
+    //document.body.style.transition = "0.3s ease";
+
+    createParticles(); // 🔥 particle burst
+}
 
             if (score >= 20) level = "hard";
             else if (score >= 10) level = "medium";

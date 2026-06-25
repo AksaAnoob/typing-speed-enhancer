@@ -12,14 +12,32 @@
             background: #0f172a;
             color: white;
             text-align: center;
+            position: relative;
+        }
+
+        /* ✅ GRID BACKGROUND (ADDED ONLY THIS) */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
         }
 
         h1 {
             margin-top: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         h2 {
             opacity: 0.8;
+            position: relative;
+            z-index: 1;
         }
 
         /* ---------------- GRID ---------------- */
@@ -28,9 +46,14 @@
             max-width: 1000px;
             margin: 30px auto;
             padding: 10px;
+
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
+
+            gap: 22px;
+
+            position: relative;
+            z-index: 1; /* IMPORTANT so it stays above grid bg */
         }
 
         /* ---------------- CARD ---------------- */
@@ -40,7 +63,7 @@
             align-items: center;
             justify-content: space-between;
 
-            padding: 16px 18px;
+            padding: 18px;
             border-radius: 14px;
 
             background: rgba(255,255,255,0.06);
@@ -48,6 +71,9 @@
 
             transition: 0.25s ease;
             cursor: pointer;
+
+            min-height: 80px;
+            box-sizing: border-box;
         }
 
         .mode-card:hover {
@@ -62,12 +88,13 @@
             align-items: center;
             gap: 14px;
             text-align: left;
+            min-width: 0;
         }
 
-        /* FIXED ICON BOX (IMPORTANT CHANGE) */
         .icon {
             width: 42px;
             height: 42px;
+
             display: flex;
             align-items: center;
             justify-content: center;
@@ -100,23 +127,37 @@
             color: white;
             cursor: pointer;
             transition: 0.2s;
+            flex-shrink: 0;
         }
 
         button:hover {
             background: #6366f1;
         }
 
-        /* ---------------- MOBILE FIX ---------------- */
+        /* ---------------- LOGOUT ---------------- */
 
-        @media (max-width: 500px) {
-            .mode-card {
-                flex-direction: row;
-                align-items: center;
-            }
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
 
-            .text h2 {
-                font-size: 16px;
-            }
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px;
+
+            background: #ef4444;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+
+            transition: 0.2s ease;
+
+            z-index: 2;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: scale(1.05);
         }
 
     </style>
@@ -124,93 +165,105 @@
 
 <body>
 
-    <h1>TYPE MASTERY ⚡</h1>
-    <h2>Choose Your Challenge</h2>
+<button class="logout-btn" onclick="logout()">Logout</button>
 
-    <div class="mode-container">
+<h1>TYPE MASTERY ⚡</h1>
+<h2>Choose Your Challenge</h2>
 
-        <!-- PROFILE -->
-        <div class="mode-card">
-            <div class="mode-left">
-                <div class="icon">👤</div>
-                <div class="text">
-                    <h2>Profile</h2>
-                    <p>View your personal stats.</p>
-                </div>
-            </div>
-            <button onclick="location.href='profile.html'">Open</button>
-        </div>
+<div class="mode-container">
 
-        <!-- EVENT -->
-        <div class="mode-card">
-            <div class="icon">🎭</div>
-            <div class="mode-left">
-                <div class="text">
-                    <h2>Event Mode</h2>
-                    <p>Enjoy various fun modes.</p>
-                </div>
+    <!-- PROFILE -->
+    <div class="mode-card">
+        <div class="mode-left">
+            <div class="icon">👤</div>
+            <div class="text">
+                <h2>Profile</h2>
+                <p>View your personal stats.</p>
             </div>
-            <button onclick="location.href='event.html'">Play</button>
         </div>
-        <div class="mode-card">
-            <div class="icon">🤯</div>
-            <div class="mode-left">
-                <div class="text">
-                    <h2>Event Leaderboard</h2>
-                    <p>Top event mode players.</p>
-                </div>
-            </div>
-            <button onclick="location.href='eventLeaderboard.html'">View</button>
-        </div>
-        <!-- TYPING -->
-        <div class="mode-card">
-            <div class="icon">⌨️</div>
-            <div class="mode-left">
-                <div class="text">
-                    <h2>Typing Mode</h2>
-                    <p>Practice passages and improve WPM.</p>
-                </div>
-            </div>
-            <button onclick="location.href='typing.html'">Play</button>
-        </div>
-
-        <!-- LEADERBOARD -->
-        <div class="mode-card">
-            <div class="icon">🏆</div>
-            <div class="mode-left">
-                <div class="text">
-                    <h2>Typing Leaderboard</h2>
-                    <p>See the fastest typists.</p>
-                </div>
-            </div>
-            <button onclick="location.href='leaderboard.html'">View</button>
-        </div>
-
-        <!-- BURST -->
-        <div class="mode-card">
-            <div class="icon">⚡</div>
-            <div class="mode-left">
-                <div class="text">
-                    <h2>Burst Mode</h2>
-                    <p>Type random words as fast as possible.</p>
-                </div>
-            </div>
-            <button onclick="location.href='burst.html'">Play</button>
-        </div>
-
-        <!-- BURST LEADERBOARD -->
-        <div class="mode-card">
-            <div class="icon">📊</div>
-            <div class="mode-left">
-                <div class="text">
-                    <h2>Burst Leaderboard</h2>
-                    <p>Top burst mode players.</p>
-                </div>
-            </div>
-            <button onclick="location.href='burstLeaderboard.html'">View</button>
-        </div>
-
+        <button onclick="location.href='profile.html'">Open</button>
     </div>
+
+    <!-- EVENT -->
+    <div class="mode-card">
+        <div class="icon">🎭</div>
+        <div class="mode-left">
+            <div class="text">
+                <h2>Event Mode</h2>
+                <p>Enjoy various fun modes.</p>
+            </div>
+        </div>
+        <button onclick="location.href='event.html'">Play</button>
+    </div>
+
+    <!-- EVENT LEADERBOARD -->
+    <div class="mode-card">
+        <div class="icon">🤯</div>
+        <div class="mode-left">
+            <div class="text">
+                <h2>Event Leaderboard</h2>
+                <p>Top event mode players.</p>
+            </div>
+        </div>
+        <button onclick="location.href='eventLeaderboard.html'">View</button>
+    </div>
+
+    <!-- TYPING -->
+    <div class="mode-card">
+        <div class="icon">⌨️</div>
+        <div class="mode-left">
+            <div class="text">
+                <h2>Typing Mode</h2>
+                <p>Practice passages and improve WPM.</p>
+            </div>
+        </div>
+        <button onclick="location.href='typing.html'">Play</button>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div class="mode-card">
+        <div class="icon">🏆</div>
+        <div class="mode-left">
+            <div class="text">
+                <h2>Typing Leaderboard</h2>
+                <p>See the fastest typists.</p>
+            </div>
+        </div>
+        <button onclick="location.href='leaderboard.html'">View</button>
+    </div>
+
+    <!-- BURST -->
+    <div class="mode-card">
+        <div class="icon">⚡</div>
+        <div class="mode-left">
+            <div class="text">
+                <h2>Burst Mode</h2>
+                <p>Type random words as fast as possible.</p>
+            </div>
+        </div>
+        <button onclick="location.href='burst.html'">Play</button>
+    </div>
+
+    <!-- BURST LEADERBOARD -->
+    <div class="mode-card">
+        <div class="icon">📊</div>
+        <div class="mode-left">
+            <div class="text">
+                <h2>Burst Leaderboard</h2>
+                <p>Top burst mode players.</p>
+            </div>
+        </div>
+        <button onclick="location.href='burstLeaderboard.html'">View</button>
+    </div>
+
+</div>
+
+<script>
+function logout() {
+    localStorage.removeItem("username");
+    window.location.href = "index.html";
+}
+</script>
 
 </body>
 </html>

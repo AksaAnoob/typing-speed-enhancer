@@ -14,7 +14,7 @@ if (username) {
 
 /* ---------- LOAD TEXT ---------- */
 function loadRandomText() {
-
+    document.getElementById("textDisplay").innerHTML = "";
     const difficulty = document.getElementById("difficulty").value;
     const selected = SENTENCE_BANK[difficulty];
 
@@ -24,10 +24,10 @@ function loadRandomText() {
     container.innerHTML = "";
 
     currentText.split("").forEach(char => {
-        const span = document.createElement("span");
-        span.textContent = char;
-        container.appendChild(span);
-    });
+    const span = document.createElement("span");
+    span.textContent = char;
+    document.getElementById("textDisplay").appendChild(span);
+});
 }
 
 /* ---------- FOCUS ---------- */
@@ -180,18 +180,11 @@ function restartTest() {
     startTest();
 }
 function openInstructions() {
-    console.log("Button Clicked");
-
-    const modal = document.getElementById("instructionModal");
-
-    modal.classList.remove("hidden");
-    modal.style.display = "flex";
+  document.getElementById("overlay").classList.remove("hidden");
+  document.getElementById("instructionModal").classList.remove("hidden");
 }
 
 function closeInstructions() {
-
-    const modal = document.getElementById("instructionModal");
-
-    modal.classList.add("hidden");
-    modal.style.display = "none";
+  document.getElementById("overlay").classList.add("hidden");
+  document.getElementById("instructionModal").classList.add("hidden");
 }
