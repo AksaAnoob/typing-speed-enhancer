@@ -413,28 +413,38 @@ body::before {
     }
 
     .mode-card{
-        padding:16px;
-        min-height:85px;
-    }
+    padding:14px;
+    min-height:72px;
+}
 
     .icon{
-        width:40px;
-        height:40px;
-        font-size:20px;
-    }
+    width:36px;
+    height:36px;
+    font-size:18px;
+}
 
     .text h2{
-        font-size:16px;
-    }
+    font-size:15px;
+}
 
-    .text p{
-        font-size:12px;
-    }
+.text p{
+    font-size:11px;
+}
 
     .mode-card button{
-        padding:8px 14px;
-        font-size:13px;
-    }
+    width:auto;          /* Don't stretch */
+    min-width:60px;      /* Small but consistent */
+    height:34px;
+
+    padding:0 14px;
+
+    font-size:12px;
+    font-weight:600;
+
+    border-radius:8px;
+
+    flex-shrink:0;
+}
 }
    </style>
 </head>
