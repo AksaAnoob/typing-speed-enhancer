@@ -5,12 +5,31 @@ let interval = null;
 let currentWord = "";
 let level = "easy";
 let feverMode = false;
+let availableWords = [];
+let previousLevel = "";
+let feverAnimationPlayed = false;
 
 /* ---------- RANDOM WORD ---------- */
 function getRandomWord() {
-    return WORD_BANK[level][
-        Math.floor(Math.random() * WORD_BANK[level].length)
-    ];
+
+    // Refill the list if level changes or all words are used
+    if (level !== previousLevel || availableWords.length === 0) {
+
+        previousLevel = level;
+
+        // Make a copy of the words
+        availableWords = [...WORD_BANK[level]];
+
+        // Shuffle them
+        for (let i = availableWords.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [availableWords[i], availableWords[j]] =
+            [availableWords[j], availableWords[i]];
+        }
+    }
+
+    // Take one word and remove it
+    return availableWords.pop();
 }
 
 /* ---------- LOAD WORD ---------- */
@@ -27,7 +46,8 @@ function startBurst() {
     time = 60;
     level = "easy";
     feverMode = false;
-
+    
+feverAnimationPlayed = false;
     document.getElementById("score").innerText = 0;
     document.getElementById("combo").innerText = 0;
     document.getElementById("timer").innerText = 60;
@@ -158,13 +178,13 @@ window.onload = function () {
                 document.getElementById("timer").innerText = time;
             }
 
-            if (combo === 10) {
+            if (combo === 10 && !feverAnimationPlayed) {
+
     feverMode = true;
+    feverAnimationPlayed = true;
 
-    //document.body.style.boxShadow = "0 0 30px #00f7ff, 0 0 60px #ff00ff";
-    //document.body.style.transition = "0.3s ease";
-
-    createParticles(); // 🔥 particle burst
+    createParticles();
+// 🔥 particle burst
 }
 
             if (score >= 20) level = "hard";
@@ -197,7 +217,8 @@ window.onload = function () {
         ) {
 
             combo = 0;
-            feverMode = false;
+feverMode = false;
+feverAnimationPlayed = false;
 
             document.body.style.boxShadow = "none";
 

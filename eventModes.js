@@ -17,7 +17,9 @@ let eventScore = 0;
 let wordTimeout = null;
 let countdownTimer = null;
 let timeLeft = 60;
+/* ================= NO REPEAT WORDS ================= */
 
+let availableWords = [];
 const currentUser = localStorage.getItem("username");
 
 /* ================= TIMER ================= */
@@ -34,12 +36,31 @@ function startTimer() {
         }
     }, 1000);
 }
+/* ================= GET UNIQUE WORD ================= */
 
+function getUniqueWord() {
+
+    if (availableWords.length === 0) {
+
+        // Copy all medium words
+        availableWords = [...WORD_BANK.medium];
+
+        // Shuffle them
+        for (let i = availableWords.length - 1; i > 0; i--) {
+
+            const j = Math.floor(Math.random() * (i + 1));
+
+            [availableWords[i], availableWords[j]] =
+            [availableWords[j], availableWords[i]];
+        }
+    }
+
+    return availableWords.pop();
+}
 /* ================= LOAD WORD ================= */
 function loadText() {
 
-    const pool = WORD_BANK.medium;
-    currentWord = pool[Math.floor(Math.random() * pool.length)];
+    currentWord = getUniqueWord();
 
     document.getElementById("textDisplay").innerHTML =
         currentWord
@@ -79,7 +100,7 @@ function startEventMode(modeKey) {
     currentMode = EVENT_MODES[modeKey];
     currentModeKey = modeKey;
     eventScore = 0;
-
+    availableWords = [];
     clearInterval(countdownTimer);
     clearTimeout(wordTimeout);
 
