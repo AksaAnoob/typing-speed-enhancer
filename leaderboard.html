@@ -133,8 +133,10 @@
     </div>
 </div>
 <div class="footer">
-    <button onclick="goHome()" class="back-btn">⬅ Back to Home</button>
-</div>
+<button class="back-btn" onclick="goToPage('mode.html')">
+    ⬅ Back to Home
+</button></div>
+<script src="sounds.js"></script>
 <script>
 const currentUser = localStorage.getItem("username");
 const container = document.getElementById("leaderboard");

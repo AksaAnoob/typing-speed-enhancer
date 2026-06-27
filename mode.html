@@ -483,8 +483,7 @@ body::before {
                 <p>View your personal stats.</p>
             </div>
         </div>
-        <button onclick="location.href='profile.html'">Open</button>
-    </div>
+<button onclick="goToPage('profile.html')">Open</button>    </div>
 
     <!-- EVENT -->
     <div class="mode-card">
@@ -495,8 +494,7 @@ body::before {
                 <p>Enjoy various fun modes.</p>
             </div>
         </div>
-        <button onclick="location.href='event.html'">Play</button>
-    </div>
+<button onclick="goToPage('event.html')">Play</button>    </div>
 
     <!-- EVENT LEADERBOARD -->
     <div class="mode-card">
@@ -507,8 +505,7 @@ body::before {
                 <p>Top event mode players.</p>
             </div>
         </div>
-        <button onclick="location.href='eventLeaderboard.html'">View</button>
-    </div>
+<button onclick="goToPage('eventLeaderboard.html')">View</button>    </div>
 
     <!-- TYPING -->
     <div class="mode-card">
@@ -519,8 +516,7 @@ body::before {
                 <p>Practice passages and improve WPM.</p>
             </div>
         </div>
-        <button onclick="location.href='typing.html'">Play</button>
-    </div>
+<button onclick="goToPage('typing.html')">Play</button>   </div>
 
     <!-- LEADERBOARD -->
     <div class="mode-card">
@@ -531,7 +527,7 @@ body::before {
                 <p>See the fastest typists.</p>
             </div>
         </div>
-        <button onclick="location.href='leaderboard.html'">View</button>
+<button onclick="goToPage('leaderboard.html')">View</button>
     </div>
 
     <!-- BURST -->
@@ -543,7 +539,8 @@ body::before {
                 <p>Type random words as fast as possible.</p>
             </div>
         </div>
-        <button onclick="location.href='burst.html'">Play</button>
+        <button onclick="goToPage('burst.html')">Play</button>
+
     </div>
 
     <!-- BURST LEADERBOARD -->
@@ -555,16 +552,24 @@ body::before {
                 <p>Top burst mode players.</p>
             </div>
         </div>
-        <button onclick="location.href='burstLeaderboard.html'">View</button>
+<button onclick="goToPage('burstLeaderboard.html')">View</button>
     </div>
 
 </div>
-
+<script src="sounds.js"></script>
 <script>
+
 function logout() {
-    localStorage.removeItem("username");
-    window.location.href = "index.html";
+
+    playSound("click");
+
+    setTimeout(() => {
+        localStorage.removeItem("username");
+        window.location.href = "index.html";
+    }, 100);
+
 }
+
 </script>
 
 </body>

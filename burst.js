@@ -7,6 +7,7 @@ let level = "easy";
 let feverMode = false;
 let availableWords = [];
 let previousLevel = "";
+
 let feverAnimationPlayed = false;
 
 /* ---------- RANDOM WORD ---------- */
@@ -166,10 +167,11 @@ window.onload = function () {
         if (typed === currentWord) {
 
             combo++;
-
+           
             if (combo > 10) combo = 10;
 
             if (combo >= 7) score += 3;
+
             else if (combo >= 4) score += 2;
             else score += 1;
 
@@ -182,7 +184,7 @@ window.onload = function () {
 
     feverMode = true;
     feverAnimationPlayed = true;
-
+                 playSound("combo");
     createParticles();
 // 🔥 particle burst
 }
@@ -217,8 +219,10 @@ window.onload = function () {
         ) {
 
             combo = 0;
+            playSound("reset");
 feverMode = false;
 feverAnimationPlayed = false;
+playSound("reset");
 
             document.body.style.boxShadow = "none";
 
