@@ -185,35 +185,40 @@ container.innerHTML = `
 fetch("https://typing-speed-enhancer-1.onrender.com/event-leaderboard")
 .then(res => res.json())
 .then(data => {
-    const bestMap = {};
 
-// keep only best score per user (and keep its mode too)
-data.forEach(player => {
-
-    const existing = bestMap[player.username];
-
-    if (!existing || player.score > existing.score) {
-        bestMap[player.username] = player;
-    }
-});
-
-// convert back to array
-data = Object.values(bestMap);
     if (!data || data.length === 0) {
         container.innerHTML = `<p class="empty">No scores yet. Be the first 🔥</p>`;
         return;
     }
 
+    const bestMap = {};
+
+    data.forEach(player => {
+        player.score = Number(player.score);
+
+        const existing = bestMap[player.username];
+
+        if (!existing || player.score > existing.score) {
+            bestMap[player.username] = player;
+        }
+    });
+
+    data = Object.values(bestMap);
+
+    data.forEach(p => p.score = Number(p.score));
+
     data.sort((a, b) => b.score - a.score);
 
     let rank = 1;
+
     for (let i = 0; i < data.length; i++) {
-        if (i > 0 && data[i].score < data[i - 1].score) {
+        if (i > 0 && data[i].score !== data[i - 1].score) {
             rank = i + 1;
         }
         data[i].rank = rank;
     }
 
+    // 👇 KEEP YOUR EXISTING TABLE RENDER CODE BELOW THIS
     let html = `
         <table>
             <tr>

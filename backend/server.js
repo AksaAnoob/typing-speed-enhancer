@@ -281,12 +281,28 @@ app.get("/event-leaderboard", async (req, res) => {
 
     try {
 
-        const scores = await EventScore.find()
-            .sort({ score: -1 })
-            .limit(10);
+        const scores = await EventScore.find();
 
-        const leaderboard = await Promise.all(
-            scores.map(async (score) => {
+        // STEP 1: keep best score per user
+        const bestMap = {};
+
+        scores.forEach(score => {
+            if (!bestMap[score.username] || score.score > bestMap[score.username].score) {
+                bestMap[score.username] = score;
+            }
+        });
+
+        let leaderboard = Object.values(bestMap);
+
+        // STEP 2: sort AFTER cleaning
+        leaderboard.sort((a, b) => b.score - a.score);
+
+        // STEP 3: limit AFTER sorting
+        leaderboard = leaderboard.slice(0, 10);
+
+        // STEP 4: attach avatar
+        const finalData = await Promise.all(
+            leaderboard.map(async (score) => {
 
                 const user = await User.findOne({
                     username: score.username
@@ -301,13 +317,11 @@ app.get("/event-leaderboard", async (req, res) => {
             })
         );
 
-        res.json(leaderboard);
+        res.json(finalData);
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            message: "Server Error"
-        });
+        res.status(500).json({ message: "Server Error" });
     }
 });
 app.get("/profile/:username", async (req, res) => {
