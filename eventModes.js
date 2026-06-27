@@ -24,16 +24,29 @@ const currentUser = localStorage.getItem("username");
 
 /* ================= TIMER ================= */
 function startTimer() {
+
     timeLeft = 60;
-    document.getElementById("eventTimer").innerText = timeLeft;
+
+    const timer = document.getElementById("eventTimer");
+
+    timer.innerText = timeLeft;
+
+    timer.classList.remove("timer-danger");   // Reset color when a new game starts
 
     countdownTimer = setInterval(() => {
+
         timeLeft--;
-        document.getElementById("eventTimer").innerText = timeLeft;
+
+        timer.innerText = timeLeft;
+
+        if (timeLeft <= 5) {
+            timer.classList.add("timer-danger");
+        }
 
         if (timeLeft <= 0) {
             stopEventMode(true);
         }
+
     }, 1000);
 }
 /* ================= GET UNIQUE WORD ================= */

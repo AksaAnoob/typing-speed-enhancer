@@ -343,7 +343,25 @@ body::before {
 
     transition:.2s;
 }
+.sound-btn{
+    background:#1f2937;
+    color:white;
 
+    border:none;
+    border-radius:6px;
+
+    padding:6px 12px;
+
+    font-size:13px;
+    font-weight:500;
+
+    cursor:pointer;
+    transition:.2s;
+}
+
+.sound-btn:hover{
+    background:#374151;
+}
 .footer-links a:hover{
 
     background:#4f46e5;
@@ -461,7 +479,9 @@ body::before {
         <a href="mode.html">Home</a>
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
-
+         <button id="soundBtn" class="sound-btn" onclick="toggleSound()">
+        🔊 Sound ON
+    </button>
         <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
 

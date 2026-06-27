@@ -136,7 +136,31 @@
       max-width: 90%;
       text-align: center;
     }
+    @keyframes pulse {
 
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
+
+.timer-danger{
+
+    color:#ff4d4d !important;
+
+    font-weight:bold;
+
+    animation:pulse 1s infinite;
+
+}
     .back-btn {
       padding: 10px 18px;
       border: none;

@@ -37,7 +37,7 @@ function focusInput() {
 
 /* ---------- START ---------- */
 function startTest() {
-
+document.getElementById("timer").classList.remove("timer-danger");
     clearInterval(interval);
 
     isRunning = true;
@@ -63,7 +63,11 @@ function startTest() {
 
         time--;
         document.getElementById("timer").innerText = time;
+        const timer = document.getElementById("timer");
 
+if(time <= 5){
+    timer.classList.add("timer-danger");
+}
         if (time <= 0) {
             finishTest();
         }

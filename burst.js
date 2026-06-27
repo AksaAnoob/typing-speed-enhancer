@@ -41,7 +41,7 @@ function loadWord() {
 
 /* ---------- START GAME ---------- */
 function startBurst() {
-
+    document.getElementById("timer").classList.remove("timer-danger");
     score = 0;
     combo = 0;
     time = 60;
@@ -69,7 +69,11 @@ feverAnimationPlayed = false;
 
         time--;
         document.getElementById("timer").innerText = time;
+        const timer = document.getElementById("timer");
 
+if(time <= 5){
+    timer.classList.add("timer-danger");
+}
         if (time <= 0) {
             finishBurst();
         }
