@@ -49,7 +49,7 @@ fetch("https://typing-speed-enhancer-1.onrender.com/burst-leaderboard")
             player.rank === 1 ? "🥇" :
             player.rank === 2 ? "🥈" :
             player.rank === 3 ? "🥉" :
-            player.rank;
+            "#" + player.rank;
 
         html += `
             <tr class="${rowClass}">
