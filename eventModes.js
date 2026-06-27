@@ -8,7 +8,7 @@ const EVENT_MODES = {
         speed: 3000
     }
 };
-
+let backgroundMusic = null;
 let currentMode = null;
 let currentModeKey = null;
 let currentWord = "";
@@ -93,12 +93,34 @@ function startNextWord() {
         startNextWord();
     }, currentMode.speed);
 }
+function playBackgroundMusic() {
 
+    stopBackgroundMusic();
+
+    backgroundMusic = new Audio("sounds/stress.mp3");
+
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.25;
+
+    backgroundMusic.play();
+}
+
+function stopBackgroundMusic() {
+
+    if (backgroundMusic) {
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
+        backgroundMusic = null;
+    }
+
+}
 /* ================= START MODE ================= */
 function startEventMode(modeKey) {
 
     currentMode = EVENT_MODES[modeKey];
     currentModeKey = modeKey;
+
+    playBackgroundMusic();
     eventScore = 0;
     availableWords = [];
     clearInterval(countdownTimer);
@@ -154,7 +176,7 @@ function handleTyping() {
 
 /* ================= STOP ================= */
 function stopEventMode(auto = false) {
-
+stopBackgroundMusic();
     clearTimeout(wordTimeout);
     clearInterval(countdownTimer);
 
