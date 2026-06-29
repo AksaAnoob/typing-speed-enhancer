@@ -174,7 +174,7 @@
 const currentUser = localStorage.getItem("username");
 const container = document.getElementById("leaderboard");
 
-/* loading */
+/* loading screen */
 container.innerHTML = `
     <div class="loading-screen">
         <div class="loading-text">Loading Leaderboard</div>
@@ -183,14 +183,24 @@ container.innerHTML = `
 `;
 
 fetch("https://typing-speed-enhancer-1.onrender.com/event-leaderboard")
-.then(res => res.json())
+.then(res => {
+    console.log("STATUS:", res.status);
+
+    if (!res.ok) {
+        throw new Error("HTTP Error " + res.status);
+    }
+
+    return res.json();
+})
 .then(data => {
+    console.log("DATA FROM BACKEND:", data);
 
     if (!data || data.length === 0) {
         container.innerHTML = `<p class="empty">No scores yet. Be the first 🔥</p>`;
         return;
     }
 
+    /* STEP 1: keep best score per user */
     const bestMap = {};
 
     data.forEach(player => {
@@ -205,20 +215,21 @@ fetch("https://typing-speed-enhancer-1.onrender.com/event-leaderboard")
 
     data = Object.values(bestMap);
 
-    data.forEach(p => p.score = Number(p.score));
-
+    /* STEP 2: sort */
     data.sort((a, b) => b.score - a.score);
 
-    let rank = 1;
+let rank = 1;
 
-    for (let i = 0; i < data.length; i++) {
-        if (i > 0 && data[i].score !== data[i - 1].score) {
-            rank = i + 1;
-        }
-        data[i].rank = rank;
+for (let i = 0; i < data.length; i++) {
+
+    if (i > 0 && data[i].score < data[i - 1].score) {
+        rank = i + 1;
     }
 
-    // 👇 KEEP YOUR EXISTING TABLE RENDER CODE BELOW THIS
+    data[i].rank = rank;
+}
+
+    /* STEP 4: render table */
     let html = `
         <table>
             <tr>
@@ -264,17 +275,14 @@ fetch("https://typing-speed-enhancer-1.onrender.com/event-leaderboard")
     });
 
     html += "</table>";
-
     container.innerHTML = html;
 })
 .catch(err => {
-    console.error(err);
+    console.log("ERROR:", err);
+
     container.innerHTML =
         `<p class="empty">Failed to load leaderboard ❌</p>`;
 });
-function goHome() {
-    window.location.href = "mode.html";
-}
 </script>
 
 </body>
