@@ -67,8 +67,24 @@ function goToPage(page) {
     }, 100);
 }
 
+/* ================= ADD CLICK SOUND TO ALL BUTTONS ================= */
+
+function initializeButtonClickSounds() {
+    const buttons = document.querySelectorAll("button");
+    
+    buttons.forEach(button => {
+        button.addEventListener("click", (e) => {
+            // Play click sound only if the click wasn't from a programmatic trigger
+            if (e.isTrusted) {
+                playSound("click");
+            }
+        });
+    });
+}
+
 /* ================= INIT ================= */
 
 document.addEventListener("DOMContentLoaded", () => {
     updateSoundButton();
+    initializeButtonClickSounds();
 });

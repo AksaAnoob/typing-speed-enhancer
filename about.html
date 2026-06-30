@@ -83,9 +83,13 @@ Keep practicing. Speed is built, not given. ⚡
 <button onclick="goBack()" class="back-btn">
     ⬅ Back to Home
 </button>
+<script src="sounds.js"></script>
 <script>
 function goBack() {
-    window.location.href = "mode.html";
+    playSound("click");
+    setTimeout(() => {
+        window.location.href = "mode.html";
+    }, 100);
 }
 </script>
 </body>

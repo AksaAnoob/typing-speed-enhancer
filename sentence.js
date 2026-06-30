@@ -159,9 +159,7 @@ medium: [
     "User interface design focuses on creating intuitive and visually appealing layouts for applications. It emphasizes usability, accessibility, and user experience principles.",
 
     "Data mining involves extracting useful patterns and knowledge from large datasets. It uses statistical and machine learning techniques to discover hidden relationships in data.",
-
     "Automation reduces manual effort by using software or machines to perform repetitive tasks. It increases efficiency and reduces the likelihood of human error in processes.",
-
     "System reliability ensures that software performs consistently under expected conditions without failure. It involves redundancy, fault tolerance, and continuous monitoring techniques."
 ]
 };

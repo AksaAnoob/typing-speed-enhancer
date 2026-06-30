@@ -373,7 +373,7 @@ function showModal(title, message) {
             <div class="modal-content">
                 <h2 id="modalTitle"></h2>
                 <p id="modalMessage"></p>
-                <button onclick="closeModal()">OK</button>
+                <button id="modalOkBtn" onclick="closeModal()">OK</button>
             </div>
         `;
         document.body.appendChild(modal);
@@ -382,6 +382,12 @@ function showModal(title, message) {
     document.getElementById("modalTitle").innerText = title;
     document.getElementById("modalMessage").innerText = message;
     modal.classList.remove("hidden");
+    
+    // Add click sound to OK button
+    const okBtn = document.getElementById("modalOkBtn");
+    okBtn.addEventListener("click", () => {
+        playSound("click");
+    });
 }
 
 function closeModal() {
