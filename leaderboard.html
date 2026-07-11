@@ -160,16 +160,41 @@ fetch("https://typing-speed-enhancer-1.onrender.com/leaderboard")
     }
 
     // sort
-    scores.sort((a, b) => b.wpm - a.wpm);
+    // ----------------------------
+// Sort by WPM, then Accuracy
+// ----------------------------
+scores.sort((a, b) => {
 
-    // rank system
-    let rank = 1;
-    for (let i = 0; i < scores.length; i++) {
-        if (i > 0 && scores[i].wpm < scores[i - 1].wpm) {
-            rank = i + 1;
-        }
-        scores[i].rank = rank;
+    // Higher WPM first
+    if (b.wpm !== a.wpm) {
+        return b.wpm - a.wpm;
     }
+
+    // If WPM is same, higher Accuracy first
+    return b.accuracy - a.accuracy;
+});
+
+// ----------------------------
+// Rank System
+// Players share rank ONLY if
+// BOTH WPM and Accuracy match
+// ----------------------------
+let rank = 1;
+
+for (let i = 0; i < scores.length; i++) {
+
+    if (
+        i > 0 &&
+        (
+            scores[i].wpm !== scores[i - 1].wpm ||
+            scores[i].accuracy !== scores[i - 1].accuracy
+        )
+    ) {
+        rank = i + 1;
+    }
+
+    scores[i].rank = rank;
+}
 
     let html = `
         <div class="container">
