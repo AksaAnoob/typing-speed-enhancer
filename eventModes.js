@@ -108,6 +108,11 @@ function startNextWord() {
 }
 function playBackgroundMusic() {
 
+    // Read the user's sound preference saved on the Home page
+    const soundEnabled = JSON.parse(localStorage.getItem("soundEnabled"));
+
+    if (soundEnabled === false) return;
+
     stopBackgroundMusic();
 
     backgroundMusic = new Audio("sounds/stress.mp3");
@@ -115,9 +120,8 @@ function playBackgroundMusic() {
     backgroundMusic.loop = true;
     backgroundMusic.volume = 0.25;
 
-    backgroundMusic.play();
+    backgroundMusic.play().catch(err => console.log(err));
 }
-
 function stopBackgroundMusic() {
 
     if (backgroundMusic) {
